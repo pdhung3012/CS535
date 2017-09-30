@@ -19,7 +19,7 @@ public abstract class BloomFilter {
 	 * @return 
 	 */
 	
-	public abstract int hashFunction();
+	public abstract int[] hashFunction(String s);
 	public void add(String s){
 		s = s.toLowerCase();
 	}
