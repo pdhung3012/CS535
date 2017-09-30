@@ -2,9 +2,9 @@ package pa1;
 
 public abstract class BloomFilter {
 	
-	private int filterSize;
-	private int numHashes;
-	private byte[] filter;
+	protected int filterSize;
+	protected int numHashes;
+	protected byte[] filter;
 	
 	BloomFilter(int setSize, int bitsPerElement){
 		this.filterSize = setSize * bitsPerElement;

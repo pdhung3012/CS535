@@ -3,7 +3,7 @@ package pa1;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class BloomFilterFNV {
+public class BloomFilterFNV extends BloomFilter{
 
 	private static final long FNV1_64_INIT = 0xcbf29ce484222325L;
 	private static final long FNV1_PRIME_64 = 1099511628211L;
@@ -12,11 +12,11 @@ public class BloomFilterFNV {
 	private int bitsPerElement;
 	private HashMap<String,Integer> target;
 	
+	
 
 	public BloomFilterFNV(int setSize, int bitsPerElement) {
-		setSource = new HashSet<String>(setSize);
-		this.bitsPerElement = bitsPerElement;
-		target=new HashMap<String, Integer>();
+		super(setSize,bitsPerElement);
+		
 	}
 
 	public static long hash64(byte[] data) {
@@ -61,6 +61,12 @@ public class BloomFilterFNV {
 		
 		BloomFilterFNV fnvFilter=new BloomFilterFNV(10, 8);
 		
+	}
+
+	@Override
+	public int hashFunction() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
