@@ -64,6 +64,7 @@ public class BloomFilterFNV extends BloomFilter {
 			if(!setFilter.contains(String.valueOf(arrResult[i]))){
 				isAppeared=false;
 				break;
+				
 			};
 		}
 		return isAppeared;
@@ -89,10 +90,12 @@ public class BloomFilterFNV extends BloomFilter {
 
 	}
 
+	
+
 	@Override
-	public int hashFunction() {
+	public int[] hashFunction(String s) {
 		// TODO Auto-generated method stub
-		return numberOfHashFunction;
+		return null;
 	}
 
 }
