@@ -8,6 +8,7 @@ package pa1;
  */
 
 public class BloomFilterMurmur extends BloomFilter{
+	
 	/**
 	 * BloomFilterMurmur creates a bloom filter that 
 	 * can store a Set S of cardinality setSize using
@@ -16,9 +17,18 @@ public class BloomFilterMurmur extends BloomFilter{
 	 * @param bitsPerElement
 	 */
 
-	BloomFilterMurmur(int setSize, int bitsPerElement){
-		
+	BloomFilterMurmur(int setSize, int bitsPerElement) {
+		super(setSize, bitsPerElement);
+		// TODO Auto-generated constructor stub
 	}
+
+	@Override
+	public int hashFunction() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	
 	
 	
 }

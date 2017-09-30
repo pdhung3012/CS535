@@ -2,15 +2,24 @@ package pa1;
 
 public abstract class BloomFilter {
 	
+	private int filterSize;
+	private int numHashes;
+	private byte[] filter;
 	
-	BloomFilter(){
+	BloomFilter(int setSize, int bitsPerElement){
+		this.filterSize = setSize * bitsPerElement;
+		this.numHashes = (int) (Math.log(2) * bitsPerElement);
+		
+		this.filter = new byte[filterSize];
 		
 	}
 	/**
 	 * 
 	 * @param s
+	 * @return 
 	 */
 	
+	public abstract int hashFunction();
 	public void add(String s){
 		s = s.toLowerCase();
 	}
@@ -31,8 +40,7 @@ public abstract class BloomFilter {
 	 * @return
 	 */
 	public int filterSize(){
-		
-		return 0;
+		return this.filterSize; 
 	}
 	
 	
@@ -49,7 +57,7 @@ public abstract class BloomFilter {
 	 * @return
 	 */
 	public int numHashes(){
-		return 0;
+		return this.numHashes;
 	}
 	
 }
