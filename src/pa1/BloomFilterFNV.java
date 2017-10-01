@@ -97,7 +97,7 @@ public class BloomFilterFNV extends BloomFilter {
 		// System.out.println(strInput + "\t" + strHashValue);
 
 		BloomFilterFNV fnvFilter = new BloomFilterFNV(10, 8);
-		String fpInput = "C:\\Users\\pdhung\\Documents\\GitHub\\CS535\\data\\pa1\\Relation2.txt";
+		String fpInput = "data\\pa1\\Relation2.txt";
 		String strInput = FileIO.readStringFromFile(fpInput);
 		String[] arrItem = strInput.split("\n");
 		boolean checkAppear = false;
