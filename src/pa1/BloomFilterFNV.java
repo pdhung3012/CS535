@@ -26,6 +26,10 @@ public class BloomFilterFNV extends BloomFilter {
 		super(setSize, bitsPerElement);
 		setFilter = new HashSet<String>();
 		setSource = new HashSet<String>();
+		System.out.println("Filter size "+filterSize);
+		for(int i=0;i<filterSize;i++){
+			filter[i]=0;
+		}
 	}
 
 	public long hash64(byte[] data) {
@@ -57,6 +61,13 @@ public class BloomFilterFNV extends BloomFilter {
 	public void add(String s) {
 
 		setSource.add(s);
+//		int[] arrResult = hashFunction(s);
+//		for (int i = 0; i < arrResult.length; i++) {
+//			
+//			filter[arrResult[i]]=1;
+//			//setFilter.add(String.valueOf(arrResult[i]));
+//		}
+		
 		long[] arrResult = hashMultiple64(s.getBytes());
 		for (int i = 0; i < arrResult.length; i++) {
 			setFilter.add(String.valueOf(arrResult[i]));
@@ -67,8 +78,16 @@ public class BloomFilterFNV extends BloomFilter {
 	public boolean appears(String s) {
 
 		setSource.add(s);
-		long[] arrResult = hashMultiple64(s.getBytes());
+		int[] arrResult = hashFunction(s);
 		boolean isAppeared = true;
+
+//		for (int i = 0; i < arrResult.length; i++) {
+//			if(filter[arrResult[i]]!=1){
+//				isAppeared = false;
+//				break;				
+//			}
+//		}
+		
 		for (int i = 0; i < arrResult.length; i++) {
 			if (!setFilter.contains(String.valueOf(arrResult[i]))) {
 				isAppeared = false;
@@ -126,39 +145,16 @@ public class BloomFilterFNV extends BloomFilter {
 
 	}
 
-	public static void writeObjectToFile(Object object, String objectFile,
-			boolean append) {
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(
-					new BufferedOutputStream(new FileOutputStream(objectFile,
-							append)));
-			out.writeObject(object);
-			out.flush();
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
-
-	public static Object readObjectFromFile(String objectFile) {
-		try {
-			ObjectInputStream in = new ObjectInputStream(
-					new BufferedInputStream(new FileInputStream(objectFile)));
-			Object object = in.readObject();
-			in.close();
-			return object;
-		} catch (Exception e) {
-			// e.printStackTrace();
-			return null;
-		}
-	}
-
+	
 	@Override
 	public int[] hashFunction(String s) {
 		// TODO Auto-generated method stub
 		byte[] data=s.getBytes();
 		long originalResult = hash64(data, data.length);
+		if(originalResult<0){
+			originalResult=originalResult*(-1);
+		}
+		//System.out.println(s+" original long "+originalResult);
 		int[] arrResult = new int[numHashes];
 		
 		for (int i = 1; i <= numHashes; i++) {
