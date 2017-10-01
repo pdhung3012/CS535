@@ -201,7 +201,6 @@ public class BloomFilterFNV extends BloomFilter {
 		int[] arrResult = new int[numHashes];
 
 		for (int i = 1; i <= numHashes; i++) {
-			// byte[] data = (s).getBytes();
 			byte[] data = null;
 			if (i == 1) {
 				data = (s).getBytes();
