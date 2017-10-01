@@ -1,7 +1,7 @@
 package pa1;
 /**
  * 
- * @author Shruti
+ * @author Shruti sahu
  * @author Hung
  */
 

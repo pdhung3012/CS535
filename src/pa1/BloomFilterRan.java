@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.Random;
 /**
  * 
- * @author Shruti
+ * @author Shruti Sahu
  *
  */
 public class BloomFilterRan extends BloomFilter {

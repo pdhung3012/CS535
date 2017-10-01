@@ -3,7 +3,7 @@ package pa1;
 /**
  * BloomFilterMurmur part 1.2 of Programming assignment 1
  * 
- * @author Shruti
+ * @author Shruti Sahu
  *
  */
 
