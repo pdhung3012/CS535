@@ -14,8 +14,6 @@ public class FalsePositives {
 		
 		boolean checkAppear = false;
 		String strConflict = "";
-		int indexConflict = -1;
-		int numberConflict = 0;
 		int[] arrNumConflict = new int[arrBf.length];
 		for (int i = 0; i < arrNumConflict.length; i++) {
 			arrNumConflict[i] = 0;
@@ -44,7 +42,7 @@ public class FalsePositives {
 	
 
 		for (int i = 0; i < arrBf.length; i++) {
-			arrFalsePositiveRate[i] = arrNumConflict[i] * 1.0 / arrItem.length;
+			arrFalsePositiveRate[i] = arrNumConflict[i] * 1.0 / arrQueries.length;
 		}
 
 		return arrFalsePositiveRate;
@@ -94,24 +92,30 @@ public class FalsePositives {
 	// calculate false poisitive rate of each hash functions
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int size = 2000000, bitsPerElement = 8;
 		String fpData = "data\\pa1\\words2.txt";
 		String fpQuery = "data\\pa1\\query.txt";
 		FalsePositives fp = new FalsePositives();
 
-		// FNV false positive
-		//
-		BloomFilterFNV bfFNV = new BloomFilterFNV(size, bitsPerElement);
-		BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size, bitsPerElement);
-		BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
+		
+		for(int i=1;i<=3;i++){
+			// FNV false positive
+			
+			int size = 500000; 
+			int bitsPerElement =(int) Math.pow(2, 1+i);		
+			
+			BloomFilterFNV bfFNV = new BloomFilterFNV(size, bitsPerElement);
+			BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size, bitsPerElement);
+			//BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
+			//DynamicFilter bfDyn=new DynamicFilter( bitsPerElement);
+			double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur);
+			int index = 0;
+			System.out.println("bitPerE = "+bitsPerElement+" FNV FP: " + arrResult[index++]);
+			System.out.println("bitPerE = "+bitsPerElement+" Mur mur FP: " + arrResult[index++]);
+			//System.out.println("bitPerE = "+bitsPerElement+" Random FP: " + arrResult[index++]);
+			//System.out.println("Dynamic false positive rate: " + arrResult[index++]);
 
-		double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur,bfRan);
-
-		int index = 0;
-		System.out.println("FNV false positive rate: " + arrResult[index++]);
-		System.out.println("Mur mur false positive rate: " + arrResult[index++]);
-		System.out.println("Random false positive rate: " + arrResult[index++]);
-
+		}
+		
 	}
 
 }
