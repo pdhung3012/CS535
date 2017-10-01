@@ -5,12 +5,15 @@ public abstract class BloomFilter {
 	protected int filterSize;
 	protected int numHashes;
 	protected byte[] filter;
+	protected int setSize;
+	protected int bitsPerElements;
 	
 	BloomFilter(int setSize, int bitsPerElement){
 		this.filterSize = setSize * bitsPerElement;
 		this.numHashes = (int) (Math.log(2) * bitsPerElement);
-		
 		this.filter = new byte[filterSize];
+		this.setSize = setSize;
+		this.bitsPerElements = bitsPerElement;
 		
 	}
 	/**

@@ -3,17 +3,13 @@ package pa1;
 public class BloomFilterRan extends BloomFilter {
 
 	private int primeNumber;
-	private int N;
-	private int t;
 	public BloomFilterRan(int setSize, int bitsPerElement) {
 		super(setSize, bitsPerElement);
-		this.N = setSize;
-		this.t = bitsPerElement;
 		// TODO Auto-generated constructor stub
 	}
 	
 	public int choosePrime() {
-		primeNumber = t*N;
+		primeNumber = bitsPerElements*setSize;
 		while(!checkPrime(primeNumber)) {
 			primeNumber++;
 		}
@@ -31,7 +27,8 @@ public class BloomFilterRan extends BloomFilter {
 	}
 	@Override
 	public int[] hashFunction(String s) {
-		// TODO Auto-generated method stub
+		int[] hashFnVals = new int[numHashes];
+		
 		return null;
 	}
 
