@@ -1,16 +1,25 @@
 package pa1;
 
 import java.util.Random;
-
+/**
+ * 
+ * @author Shruti
+ *
+ */
 public class BloomFilterRan extends BloomFilter {
 
-	private int primeNumber;
+	protected int primeNumber;
 	public BloomFilterRan(int setSize, int bitsPerElement) {
 		super(setSize, bitsPerElement);
 		// TODO Auto-generated constructor stub
 	}
 	
-	private int pickPrime() {
+	public BloomFilterRan(int bitsPerElement) {
+		super(bitsPerElement);
+		// TODO Auto-generated constructor stub
+	}
+
+	protected int pickPrime() {
 		int p = bitsPerElements*setSize;
 		while(!checkPrime(p)) {
 			p++;
@@ -18,7 +27,7 @@ public class BloomFilterRan extends BloomFilter {
 		return p;
 	}
 	
-	private boolean checkPrime(int p) {
+	protected boolean checkPrime(int p) {
 		for(int i = 1; i <= p/2; i++) {
 			if(p%i == 0)
 				return false;

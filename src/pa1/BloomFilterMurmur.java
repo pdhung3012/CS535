@@ -75,7 +75,7 @@ public class BloomFilterMurmur extends BloomFilter {
 			h *= m;
 			h ^= h >>> r;
 			
-			hashFnVals[j] = (int) h % numHashes;
+			hashFnVals[j] = (int) h % filterSize;
 		}
 		return hashFnVals;
 	}
