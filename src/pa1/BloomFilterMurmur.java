@@ -74,8 +74,9 @@ public class BloomFilterMurmur extends BloomFilter {
 			h ^= h >>> r;
 			h *= m;
 			h ^= h >>> r;
-			
-			hashFnVals[j] = (int) h % filterSize;
+			//	System.out.println((int) (Math.abs(h)%filterSize));
+			hashFnVals[j] = (int) (Math.abs(h) % filterSize);
+		
 		}
 		return hashFnVals;
 	}

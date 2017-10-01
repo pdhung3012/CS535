@@ -51,6 +51,11 @@ public abstract class BloomFilter {
 	 */
 	public boolean appears(String s){
 		s = s.toLowerCase();
+		int[] hashResult = hashFunction(s);
+		for(int i = 0; i < hashResult.length; i++) {
+			if(filter[hashResult[i]] == 0) 
+				return false;	
+		}
 		return true;
 	}
 	

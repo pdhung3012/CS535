@@ -1,5 +1,6 @@
 package pa1;
 
+import java.math.BigInteger;
 import java.util.Random;
 /**
  * 
@@ -8,9 +9,11 @@ import java.util.Random;
  */
 public class BloomFilterRan extends BloomFilter {
 
-	protected int primeNumber;
+
 	public BloomFilterRan(int setSize, int bitsPerElement) {
 		super(setSize, bitsPerElement);
+		this.filterSize =  pickPrime();
+		//System.out.println("filterSize=="+filterSize);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -21,29 +24,25 @@ public class BloomFilterRan extends BloomFilter {
 
 	protected int pickPrime() {
 		int p = bitsPerElements*setSize;
-		while(!checkPrime(p)) {
-			p++;
+		//System.out.println(p);
+		while(true) {
+			for(int i = 2; i <= p/2 ; i++) {
+				if(p%i==0)
+					p++;
+				else
+					return p;
+			}
 		}
-		return p;
 	}
 	
-	protected boolean checkPrime(int p) {
-		for(int i = 1; i <= p/2; i++) {
-			if(p%i == 0)
-				return false;
-			else
-				continue;
-		}
-		return true;
-	}
 	@Override
 	public int[] hashFunction(String s) {
 		int[] hashFnVals = new int[numHashes];
-		primeNumber = pickPrime();
-		int a = new Random().nextInt(primeNumber);
-		int b = new Random().nextInt(primeNumber);
+		int a = new Random().nextInt(filterSize);
+		int b = new Random().nextInt(filterSize);
+		//System.out.println("a=="+a+"\tb=="+b);
 		for(int i = 0; i < numHashes; i++) {
-			hashFnVals[i] = (a*s.hashCode() + b) % primeNumber;
+			hashFnVals[i] = (int) (Math.abs(a*s.hashCode() + b) % filterSize);
 		}
 		return hashFnVals;
 	}
