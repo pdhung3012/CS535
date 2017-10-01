@@ -22,7 +22,7 @@ public class FalsePositives {
 		}
 		double[] arrFalsePositiveRate = new double[arrBf.length];
 		for (int i = 0; i < arrItem.length; i++) {
-			String strContent = arrItem[i].split("\\s+")[0];
+			String strContent = arrItem[i].trim();
 			for (int j = 0; j < arrBf.length; j++) {
 				arrBf[j].add(strContent);
 			}
@@ -30,7 +30,7 @@ public class FalsePositives {
 		}
 		
 		for (int i = 0; i < arrQueries.length; i++) {
-			String strQuery = arrQueries[i].split("\\s+")[0];
+			String strQuery = arrQueries[i].trim();
 			for (int j = 0; j < arrBf.length; j++) {
 				checkAppear = arrBf[j].appears(strQuery);
 				if (checkAppear) {
