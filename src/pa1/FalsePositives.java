@@ -95,24 +95,21 @@ public class FalsePositives {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		int size = 2000000, bitsPerElement = 8;
-		String fpData = "data\\pa1\\Relation2.txt";
+		String fpData = "data\\pa1\\words2.txt";
+		String fpQuery = "data\\pa1\\query.txt";
 		FalsePositives fp = new FalsePositives();
 
 		// FNV false positive
 		BloomFilterFNV bfFNV = new BloomFilterFNV(size, bitsPerElement);
-		// BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size,
-		// bitsPerElement);
-		// BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
+		BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size, bitsPerElement);
+		BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
 
-		// double[] arrResult=
-		// fp.calculateFalPositive(fpData,bfFNV,bfMurMur,bfRan);
-		double[] arrResult = fp.calculateFalPositive(fpData, bfFNV);
+		double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur,bfRan);
 
 		int index = 0;
 		System.out.println("FNV false positive rate: " + arrResult[index++]);
-//		System.out
-//				.println("Mur mur false positive rate: " + arrResult[index++]);
-//		System.out.println("Random false positive rate: " + arrResult[index++]);
+		System.out.println("Mur mur false positive rate: " + arrResult[index++]);
+		System.out.println("Random false positive rate: " + arrResult[index++]);
 
 	}
 
