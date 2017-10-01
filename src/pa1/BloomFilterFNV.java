@@ -31,6 +31,7 @@ public class BloomFilterFNV extends BloomFilter {
 		setFilter = new HashSet<String>();
 		setSource = new HashSet<String>();
 		System.out.println("Filter size " + filterSize);
+		System.out.println("Number of hash " + numHashes);
 		for (int i = 0; i < filterSize; i++) {
 			filter[i] = 0;
 		}
@@ -40,17 +41,17 @@ public class BloomFilterFNV extends BloomFilter {
 		return hash64(data, data.length);
 	}
 
-//	public long[] hashMultiple64(byte[] data) {
-//		long originalResult = Math.abs(hash64(data, data.length));
-//		long[] arrResult = new long[numberOfHashFunction];
-//
-//		for (int i = 1; i <= numberOfHashFunction; i++) {
-//			long newValue = originalResult + originalResult % i;
-//			arrResult[i - 1] = newValue;
-//		}
-//		return arrResult;
-//
-//	}
+	// public long[] hashMultiple64(byte[] data) {
+	// long originalResult = Math.abs(hash64(data, data.length));
+	// long[] arrResult = new long[numberOfHashFunction];
+	//
+	// for (int i = 1; i <= numberOfHashFunction; i++) {
+	// long newValue = originalResult + originalResult % i;
+	// arrResult[i - 1] = newValue;
+	// }
+	// return arrResult;
+	//
+	// }
 
 	public long hash64(byte[] data, int length) {
 		// long hash = FNV1_64_INIT;
@@ -106,7 +107,7 @@ public class BloomFilterFNV extends BloomFilter {
 
 	public boolean appears(String s) {
 
-		setSource.add(s);
+		// setSource.add(s);
 		int[] arrResult = hashFunction(s);
 		boolean isAppeared = true;
 
@@ -179,30 +180,43 @@ public class BloomFilterFNV extends BloomFilter {
 		// System.out.println("No conflict");
 		// }
 
-		String strInput = "gcfdaacdbegbgaf";
-		String strHexa = "e5803b95054b6068";
-//		BigInteger bi = new BigInteger(strHexa, 16);
-//		System.out.println(bi);
-		System.out.println(fnvFilter.hash64(strInput));
-//		System.out.println(fnvFilter.hashFunction(strInput)[0]);
+		// String strInput = "gcfdaacdbegbgaf";
+		// String strHexa = "e5803b95054b6068";
+		// // BigInteger bi = new BigInteger(strHexa, 16);
+		// // System.out.println(bi);
+		// System.out.println(fnvFilter.hash64(strInput));
+		// System.out.println(fnvFilter.hashFunction(strInput)[0]);
 		// System.out.println("Test long value of"+Long.parseLong(strHexa, 16));
+		long numberLong = 4964837534910468014L;
+		int numberInt = (int) numberLong;
+		System.out.println(numberInt);
 
 	}
 
 	@Override
 	public int[] hashFunction(String s) {
 		// TODO Auto-generated method stub
-		byte[] data = s.getBytes();
-		long originalResult = Math.abs(hash64(data, data.length));
-		// if(originalResult<0){
-		// originalResult=originalResult*(-1);
-		// }
-	//	System.out.println(s + " original long " + originalResult);
+
+		// System.out.println(s + " original long " + originalResult);
 		int[] arrResult = new int[numHashes];
 
 		for (int i = 1; i <= numHashes; i++) {
-			long newValue = originalResult % (filterSize - i);
-			arrResult[i - 1] = (int) newValue;
+			// byte[] data = (s).getBytes();
+			byte[] data = null;
+			if (i == 1) {
+				data = (s).getBytes();
+			} else {
+				data = (s + "" + i).getBytes();
+			}
+
+			long originalResult = hash64(data);
+			originalResult = Math.abs(originalResult);
+			// long newValue = originalResult % (filterSize-i*100);
+			// System.out.println("Original result "+originalResult);
+			arrResult[i - 1] = (int) (originalResult % filterSize);
+			// arrResult[i - 1] = Math.abs(((int) originalResult) % filterSize);
+			// System.out.println("Original result "+originalResult+" "+arrResult[i
+			// - 1]);
 		}
 		return arrResult;
 	}
