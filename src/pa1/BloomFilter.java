@@ -24,7 +24,12 @@ public abstract class BloomFilter {
 	
 	public abstract int[] hashFunction(String s);
 	public void add(String s){
+		int[] hashValues = hashFunction(s);
 		s = s.toLowerCase();
+		for(int k = 0; k < numHashes; k++) {
+			 filter[hashValues[k]] = 1;
+		}
+		
 	}
 	
 	
