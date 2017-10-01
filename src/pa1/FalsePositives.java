@@ -4,6 +4,52 @@ import util.FileIO;
 
 public class FalsePositives {
 
+	
+	public double[] calculateFalPositive(String fpData,String fpQueries, BloomFilter... arrBf) {
+		String strData = FileIO.readStringFromFile(fpData);
+		String[] arrItem = strData.split("\n");
+		
+		String strQueries = FileIO.readStringFromFile(fpQueries);
+		String[] arrQueries = strQueries.split("\n");
+		
+		boolean checkAppear = false;
+		String strConflict = "";
+		int indexConflict = -1;
+		int numberConflict = 0;
+		int[] arrNumConflict = new int[arrBf.length];
+		for (int i = 0; i < arrNumConflict.length; i++) {
+			arrNumConflict[i] = 0;
+		}
+		double[] arrFalsePositiveRate = new double[arrBf.length];
+		for (int i = 0; i < arrItem.length; i++) {
+			String strContent = arrItem[i].split("\\s+")[0];
+			for (int j = 0; j < arrBf.length; j++) {
+				arrBf[j].add(strContent);
+			}
+
+		}
+		
+		for (int i = 0; i < arrQueries.length; i++) {
+			String strQuery = arrQueries[i].split("\\s+")[0];
+			for (int j = 0; j < arrBf.length; j++) {
+				checkAppear = arrBf[j].appears(strQuery);
+				if (checkAppear) {
+					arrNumConflict[j]++;
+					
+				}
+				
+			}
+
+		}
+	
+
+		for (int i = 0; i < arrBf.length; i++) {
+			arrFalsePositiveRate[i] = arrNumConflict[i] * 1.0 / arrItem.length;
+		}
+
+		return arrFalsePositiveRate;
+	}
+	
 	public double[] calculateFalPositive(String fpInput, BloomFilter... arrBf) {
 		String strInput = FileIO.readStringFromFile(fpInput);
 		String[] arrItem = strInput.split("\n");
