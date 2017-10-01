@@ -4,32 +4,41 @@ import util.FileIO;
 
 public class FalsePositives {
 
-	public double calculateFalPositive(BloomFilter bf,String fpInput){
+	public double[] calculateFalPositive(String fpInput,BloomFilter... arrBf){
 		String strInput = FileIO.readStringFromFile(fpInput);
 		String[] arrItem = strInput.split("\n");
 		boolean checkAppear = false;
 		String strConflict = "";
 		int indexConflict = -1;
 		int numberConflict=0;
+		int[] arrNumConflict=new int[arrBf.length];
+		double[] arrFalsePositiveRate=new double[arrBf.length];
 		for (int i = 0; i < arrItem.length; i++) {
 			String strContent = arrItem[i].split("\\s+")[0];
-			checkAppear = bf.appears(strContent);
-			if (checkAppear) {
-				strConflict = strContent;
-				indexConflict = i + 1;
-				numberConflict++;
-				System.out.println("Conflict position " + indexConflict + " "
-						+ strConflict);
-				//break;
+			for(int j=0;j<arrBf.length;j++){
+				checkAppear = arrBf[j].appears(strContent);
+				if (checkAppear) {
+//					strConflict = strContent;
+//					indexConflict = i + 1;
+					arrNumConflict[i]++;
+//					System.out.println("Conflict position " + indexConflict + " "
+//							+ strConflict);
+				}
+				arrBf[j].add(strContent);
 			}
-			bf.add(strContent);
+			
 		}
-		if (numberConflict>0) {
-			System.out.println("Number conflict " + numberConflict);
-		} else {
-			System.out.println("No conflict");
+//		if (numberConflict>0) {
+//			System.out.println("Number conflict " + numberConflict);
+//		} else {
+//			System.out.println("No conflict");
+//		}
+		
+		for(int i=0;i<arrBf.length;i++){
+			arrFalsePositiveRate[i]=arrNumConflict[i]*1.0/arrItem.length;
 		}
-		return numberConflict*1.0/arrItem.length;
+		
+		return arrFalsePositiveRate;
 	}
 	//calculate false poisitive rate of each hash functions
 	public static void main(String[] args) {
@@ -38,9 +47,19 @@ public class FalsePositives {
 		String fpData="data\\pa1\\Relation2.txt";
 		FalsePositives fp=new FalsePositives();
 		
-		//mur mur false positive		
-		BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size, 8);
-		System.out.println("Mur mur false positive rate: "+fp.calculateFalPositive(bfMurMur, fpData));
+		//FNV false positive		
+		BloomFilterMurmur bfFNV=new BloomFilterMurmur(size, bitsPerElement);
+		BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size, bitsPerElement);
+		BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
+		
+		double[] arrResult= fp.calculateFalPositive(fpData,bfFNV,bfMurMur,bfRan);
+		
+		int index=0;
+		System.out.println("FNV false positive rate: "+index++);
+		System.out.println("Mur mur false positive rate: "+index++);
+		System.out.println("Random false positive rate: "+index++);
+		
+
 		
 	}
 

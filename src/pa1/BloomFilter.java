@@ -24,6 +24,7 @@ public abstract class BloomFilter {
 		this.filterSize = setSize * bitsPerElement;
 		this.numHashes = (int) (Math.log(2) * bitsPerElement);
 		this.filter = new byte[filterSize];
+		
 	}
 	/**
 	 * 

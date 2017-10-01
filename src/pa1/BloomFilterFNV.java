@@ -157,7 +157,15 @@ public class BloomFilterFNV extends BloomFilter {
 	@Override
 	public int[] hashFunction(String s) {
 		// TODO Auto-generated method stub
-		return null;
+		byte[] data=s.getBytes();
+		long originalResult = hash64(data, data.length);
+		int[] arrResult = new int[numHashes];
+		
+		for (int i = 1; i <= numHashes; i++) {
+			long newValue = originalResult + originalResult % i;
+			arrResult[i-1] =(int) newValue;
+		}
+		return arrResult;
 	}
 
 }
