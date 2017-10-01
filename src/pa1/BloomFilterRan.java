@@ -1,5 +1,7 @@
 package pa1;
 
+import java.util.Random;
+
 public class BloomFilterRan extends BloomFilter {
 
 	private int primeNumber;
@@ -8,12 +10,12 @@ public class BloomFilterRan extends BloomFilter {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int choosePrime() {
-		primeNumber = bitsPerElements*setSize;
-		while(!checkPrime(primeNumber)) {
-			primeNumber++;
+	private int pickPrime() {
+		int p = bitsPerElements*setSize;
+		while(!checkPrime(p)) {
+			p++;
 		}
-		return primeNumber;
+		return p;
 	}
 	
 	private boolean checkPrime(int p) {
@@ -28,8 +30,13 @@ public class BloomFilterRan extends BloomFilter {
 	@Override
 	public int[] hashFunction(String s) {
 		int[] hashFnVals = new int[numHashes];
-		
-		return null;
+		primeNumber = pickPrime();
+		int a = new Random().nextInt(primeNumber);
+		int b = new Random().nextInt(primeNumber);
+		for(int i = 0; i < numHashes; i++) {
+			hashFnVals[i] = (a*s.hashCode() + b) % primeNumber;
+		}
+		return hashFnVals;
 	}
 
 }
