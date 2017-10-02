@@ -92,8 +92,10 @@ public class FalsePositives {
 	// calculate false poisitive rate of each hash functions
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fpData = "data\\pa1\\words2.txt";
-		String fpQuery = "data\\pa1\\query.txt";
+//		String fpData = "data\\pa1\\words2.txt";
+//		String fpQuery = "data\\pa1\\query.txt";
+		String fpData = "data/pa1/words2.txt";
+		String fpQuery = "data/pa1/query.txt";
 		FalsePositives fp = new FalsePositives();
 
 		
@@ -105,14 +107,14 @@ public class FalsePositives {
 			
 			BloomFilterFNV bfFNV = new BloomFilterFNV(size, bitsPerElement);
 			BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size, bitsPerElement);
-			//BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
-			//DynamicFilter bfDyn=new DynamicFilter( bitsPerElement);
-			double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur);
+			BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
+			DynamicFilter bfDyn=new DynamicFilter( bitsPerElement);
+			double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur,bfDyn);
 			int index = 0;
 			System.out.println("bitPerE = "+bitsPerElement+" FNV FP: " + arrResult[index++]);
 			System.out.println("bitPerE = "+bitsPerElement+" Mur mur FP: " + arrResult[index++]);
 			//System.out.println("bitPerE = "+bitsPerElement+" Random FP: " + arrResult[index++]);
-			//System.out.println("Dynamic false positive rate: " + arrResult[index++]);
+			System.out.println("Dynamic false positive rate: " + arrResult[index++]);
 
 		}
 		
