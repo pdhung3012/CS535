@@ -96,8 +96,8 @@ public class FalsePositives {
 		// TODO Auto-generated method stub
 //		String fpData = "data\\pa1\\words2.txt";
 //		String fpQuery = "data\\pa1\\query.txt";
-		String fpData = "data/pa1/words2.txt";
-		String fpQuery = "data/pa1/query3.txt";
+		String fpData = "data/pa1/data.txt";
+		String fpQuery = "data/pa1/q.txt";
 		FalsePositives fp = new FalsePositives();
 
 		
@@ -111,14 +111,14 @@ public class FalsePositives {
 			BloomFilterMurmur bfMurMur=new BloomFilterMurmur(size, bitsPerElement);
 			BloomFilterRan bfRan=new BloomFilterRan(size, bitsPerElement);
 			DynamicFilter bfDyn=new DynamicFilter( bitsPerElement);
-			double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur,bfDyn);
+			double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur);
 			int index = 0;
 			System.out.println("bitPerE = "+bitsPerElement+" FNV FP: " + arrResult[index++]);
 			System.out.println("bitPerE = "+bitsPerElement+" Mur mur FP: " + arrResult[index++]);
 			//System.out.println("bitPerE = "+bitsPerElement+" Random FP: " + arrResult[index++]);
-			System.out.println("Dynamic false positive rate: " + arrResult[index++]);
+			//System.out.println("Dynamic false positive rate: " + arrResult[index++]);
 			
-			System.out.println("Dynamic Filters=="+ bfDyn.dynamicFilters.size());
+			System.out.println("Dynamic Filters == "+ bfDyn.dynamicFilters.size());
 			
 		}
 		

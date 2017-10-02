@@ -32,9 +32,9 @@ public class Utility {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		RandomString gen = new RandomString(8, ThreadLocalRandom.current());
+		RandomString gen = new RandomString(20, ThreadLocalRandom.current());
 		int numberHash=500000;
-		int sizeSyn=10000;
+		int sizeSyn=1;
 		
 		HashSet<String> setData=new HashSet<String>();
 		StringBuilder strData=new StringBuilder();
@@ -44,21 +44,22 @@ public class Utility {
 			//System.out.println(strOrigin);
 			if(!setData.contains(strOrigin)){
 				setData.add(strOrigin);
-				
-				for(int i=1;i<=sizeSyn;i++){
-					String strItem=strOrigin+String.format("%05d", i);
-					//System.out.println(strItem);
-					strData.append(strItem+"\n");						
-//					if(setData.size()==(numberHash/sizeSyn)){
-//						break;
-//					}
+				if(sizeSyn==1){
+					strData.append(strOrigin+"\n");
+				} else{
+					for(int i=1;i<=sizeSyn;i++){
+						String strItem=strOrigin+String.format("%05d", i);
+						//System.out.println(strItem);
+						strData.append(strItem+"\n");						
+					}
 				}
+				
 			}
 			
 			System.out.println("Data "+setData.size());
 		}
 		FileIO.writeStringToFile(strData.toString(), "data/pa1/data.txt");
-		System.out.println(strData+ "Done step 1");
+		System.out.println( "Done step 1");
 		
 		StringBuilder strQuery=new StringBuilder();
 		HashSet<String> setQuery=new HashSet<String>();		
@@ -68,13 +69,16 @@ public class Utility {
 
 			if(!setData.contains(strOrigin)&&!setQuery.contains(strOrigin)){
 				setQuery.add(strOrigin);
-				for(int i=1;i<=sizeSyn;i++){
-					String strItem=strOrigin+String.format("%05d", i);
-					strQuery.append(strItem+"\n");	
-//					if(setQuery.size()==numberHash/sizeSyn){
-//						break;
-//					}
+				if(sizeSyn==1){
+					strQuery.append(strOrigin+"\n");
+				} else{
+					for(int i=1;i<=sizeSyn;i++){
+						String strItem=strOrigin+String.format("%05d", i);
+						strQuery.append(strItem+"\n");	
+
+					}
 				}
+				
 			}
 			
 			
