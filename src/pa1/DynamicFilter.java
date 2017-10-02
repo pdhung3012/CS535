@@ -51,14 +51,22 @@ public class DynamicFilter extends BloomFilterRan {
 		int count = 0;
 		for(int i = 0; i < numFilters; i++) {
 			byte[] filterAtI = dynamicFilters.get(i);
-			for(int j = 0; j < hashRes.length; j++) {
-				if(hashRes[j] > filterAtI.length)
-					break;
-				else if(filterAtI[hashRes[j]] == 0)
-					break;
-				else
-					count++;
-			}
+			
+				for(int j = 0; j < hashRes.length; j++) {
+					try{
+					if(hashRes[j] >= filterAtI.length)
+						break;
+					else if(filterAtI[hashRes[j]] == 0)
+						break;
+					else
+						count++;
+					}catch(Exception ex){
+						System.out.println(hashRes[j]+"\t"+filterAtI.length+"\t"+filterSize+"\t"+j);
+						throw new ArrayIndexOutOfBoundsException(ex.getMessage());
+					}
+				}
+			
+			
 		}
 		if(count == hashRes.length)
 			return true;
