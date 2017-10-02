@@ -48,22 +48,23 @@ public class BloomJoin {
 			}
 		}
 		
-		String strR3Content = "";
+		StringBuilder strR3Content = new StringBuilder();
 
 		for (int i = 0; i < arrR1.length; i++) {
 			String[] arrItemR1 = arrR1[i].trim().split("\\s+");
 			if (arrItemR1.length == 2) {
-				ArrayList<String> r3Item = mapFilterR3.get(arrItemR1[0]);
+				ArrayList<String> r3Item = mapValidateR3.get(arrItemR1[0]);
 				String first2Col = arrItemR1[0] + "\t" + arrItemR1[1];
 				if (r3Item != null) {
 					// System.out.println(i+"\t"+arrItemR1[0]);
 					for (int j = 0; j < r3Item.size(); j++) {
-						strR3Content += first2Col + "\t" + r3Item.get(j) + "\n";
+						strR3Content.append(first2Col + "\t" + r3Item.get(j) + "\n");
 					}
 				}
 			}
 		}
-		FileIO.writeStringToFile(strR3Content, r3Validate);
+		System.out.println("Map validate size: "+mapValidateR3.size());
+		FileIO.writeStringToFile(strR3Content.toString(), r3Validate);
 
 	}
 
@@ -73,11 +74,13 @@ public class BloomJoin {
 		for (int i = 0; i < arrR1.length; i++) {
 			String[] arrItemR1 = arrR1[i].trim().split("\\s+");
 			if (arrItemR1.length == 2) {
-				bloom.add(arrItemR1[1]);
+			//	System.out.println("The arr R1: "+arrItemR1[0]);
+				bloom.add(arrItemR1[0].trim());
 			}
 		}
 
 		// r2 check the bloom in r1
+		
 		mapFilterR3 = new HashMap<String, ArrayList<String>>();
 		for (int i = 0; i < arrR2.length; i++) {
 			String[] arrItemR2 = arrR2[i].trim().split("\\s+");
@@ -95,13 +98,14 @@ public class BloomJoin {
 				}
 			}
 		}
-
+		System.out.println("Map filter size: "+mapFilterR3.size());
+		
 		// server 1 get data to join R3 in join function
 
 	}
 
 	public void join(String r3) {
-		String strR3Content = "";
+		StringBuilder strR3Content = new StringBuilder();
 		for (int i = 0; i < arrR1.length; i++) {
 			String[] arrItemR1 = arrR1[i].trim().split("\\s+");
 			if (arrItemR1.length == 2) {
@@ -110,12 +114,12 @@ public class BloomJoin {
 				if (r3Item != null) {
 					// System.out.println(i+"\t"+arrItemR1[0]);
 					for (int j = 0; j < r3Item.size(); j++) {
-						strR3Content += first2Col + "\t" + r3Item.get(j) + "\n";
+						strR3Content.append(first2Col + "\t" + r3Item.get(j) + "\n");
 					}
 				}
 
 			}
 		}
-		FileIO.writeStringToFile(strR3Content, r3);
+		FileIO.writeStringToFile(strR3Content.toString(), r3);
 	}
 }
