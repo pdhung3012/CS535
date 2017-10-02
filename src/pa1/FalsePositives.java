@@ -97,7 +97,7 @@ public class FalsePositives {
 //		String fpData = "data\\pa1\\words2.txt";
 //		String fpQuery = "data\\pa1\\query.txt";
 		String fpData = "data/pa1/data.txt";
-		String fpQuery = "data/pa1/q.txt";
+		String fpQuery = "data/pa1/q2.txt";
 		FalsePositives fp = new FalsePositives();
 
 		

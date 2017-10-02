@@ -82,7 +82,7 @@ public class BloomFilterFNV extends BloomFilter {
 	}
 
 	public void add(String s) {
-
+		s=s.toLowerCase();
 		setSource.add(s);
 		int[] arrResult = hashFunction(s);
 		for (int i = 0; i < arrResult.length; i++) {
