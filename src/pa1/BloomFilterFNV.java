@@ -205,7 +205,7 @@ public class BloomFilterFNV extends BloomFilter {
 			if (i == 1) {
 				data = (s).getBytes();
 			} else {
-				data = (s + "" + i).getBytes();
+				data = (String.format("%02d", i)+""+s).getBytes();
 			}
 
 			long originalResult = hash64(data);
