@@ -51,7 +51,16 @@ public abstract class BloomFilter {
 		int[] hashValues = hashFunction(s);
 		s = s.toLowerCase();
 		for(int k = 0; k < numHashes; k++) {
-			 filter[hashValues[k]] = 1;
+			if(hashValues[k]> filter.length )
+				System.out.println(hashValues[k]+ " filter"+ filter.length );
+			try {
+				this.filter[hashValues[k]] = 1;
+			}
+			 catch(Exception e) {
+				 System.out.println(this.getClass().getName());
+				 System.out.println("hashvalue==="+hashValues[k]);
+				 e.printStackTrace();
+			 }
 		}
 		dataSize++;
 	}

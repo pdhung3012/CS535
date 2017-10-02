@@ -13,6 +13,7 @@ public class BloomFilterRan extends BloomFilter {
 	public BloomFilterRan(int setSize, int bitsPerElement) {
 		super(setSize, bitsPerElement);
 		this.filterSize =  pickPrime();
+		this.filter = new byte[filterSize];
 		//System.out.println("filterSize=="+filterSize);
 		// TODO Auto-generated constructor stub
 	}
@@ -38,11 +39,12 @@ public class BloomFilterRan extends BloomFilter {
 	@Override
 	public int[] hashFunction(String s) {
 		int[] hashFnVals = new int[numHashes];
-		int a = new Random().nextInt(filterSize);
-		int b = new Random().nextInt(filterSize);
+		int a = new Random().nextInt(filterSize-1);
+		int b = new Random().nextInt(filterSize-1);
 		//System.out.println("a=="+a+"\tb=="+b);
 		for(int i = 0; i < numHashes; i++) {
-			hashFnVals[i] = (int) (Math.abs(a*s.hashCode() + b) % filterSize);
+			int h = Math.abs(a*s.hashCode() + b);
+			hashFnVals[i] =  h % filterSize;
 		}
 		return hashFnVals;
 	}
