@@ -10,26 +10,30 @@ import java.util.ArrayList;
 
 public class DynamicFilter extends BloomFilterRan {
 	
-	ArrayList<byte[]> dynamicFilters = new ArrayList<byte[]>();
+	public ArrayList<byte[]> dynamicFilters = new ArrayList<byte[]>();
 	
 	public DynamicFilter(int bitsPerElement) {
 		super(bitsPerElement);
 		
 		this.setSize = 1000;
+		this.bitsPerElements = bitsPerElement;
 		this.filterSize = setSize * bitsPerElement;
 		this.numHashes = (int) (Math.log(2) * bitsPerElement);
 		this.filter = new byte[filterSize];
-		dynamicFilters.add(this.filter);
+		this.dynamicFilters.add(this.filter);
 	}
 
 	
-
+	
 	@Override
 	public void add(String s) {
+		//System.out.println("DataSize==="+dataSize+"\t Filter Size==="+filterSize +"\t check=="+((int)dataSize > (int)setSize));
 		if(dataSize > setSize) {
-			this.filterSize *= 2;
+			this.setSize*=2;
+			this.filterSize = setSize * this.bitsPerElements;
+			//System.out.println(filterSize);
 			filter = new byte[filterSize];
-			dynamicFilters.add(filter);
+			this.dynamicFilters.add(filter);
 		}
 		int[] hashValues = hashFunction(s);
 		s = s.toLowerCase();
@@ -42,16 +46,22 @@ public class DynamicFilter extends BloomFilterRan {
 	
 	@Override
 	public boolean appears(String s) {
-		int numFilters = dynamicFilters.size();
+		int numFilters = this.dynamicFilters.size();
 		int[] hashRes = hashFunction(s);
+		int count = 0;
 		for(int i = 0; i < numFilters; i++) {
-			int count = 0;
 			byte[] filterAtI = dynamicFilters.get(i);
 			for(int j = 0; j < hashRes.length; j++) {
-				if(filterAtI[hashRes[j]] == 0)
-					return false;
+				if(hashRes[j] > filterAtI.length)
+					break;
+				else if(filterAtI[hashRes[j]] == 0)
+					break;
+				else
+					count++;
 			}
 		}
-		return false;
+		if(count == hashRes.length)
+			return true;
+		else return false;
 	}
 }

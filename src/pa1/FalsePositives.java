@@ -1,5 +1,7 @@
 package pa1;
 
+import java.util.ArrayList;
+
 import util.FileIO;
 
 public class FalsePositives {
@@ -95,7 +97,7 @@ public class FalsePositives {
 //		String fpData = "data\\pa1\\words2.txt";
 //		String fpQuery = "data\\pa1\\query.txt";
 		String fpData = "data/pa1/words2.txt";
-		String fpQuery = "data/pa1/query.txt";
+		String fpQuery = "data/pa1/query3.txt";
 		FalsePositives fp = new FalsePositives();
 
 		
@@ -115,7 +117,9 @@ public class FalsePositives {
 			System.out.println("bitPerE = "+bitsPerElement+" Mur mur FP: " + arrResult[index++]);
 			//System.out.println("bitPerE = "+bitsPerElement+" Random FP: " + arrResult[index++]);
 			System.out.println("Dynamic false positive rate: " + arrResult[index++]);
-
+			
+			System.out.println("Dynamic Filters=="+ bfDyn.dynamicFilters.size());
+			
 		}
 		
 	}

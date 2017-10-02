@@ -14,10 +14,19 @@ public abstract class BloomFilter {
 	protected int bitsPerElements;
 	protected int dataSize;
 	
+	/**
+	 * Constructor with only one parameter i.e bitsPerElement
+	 * @param bitsPerElement
+	 */
 	BloomFilter(int bitsPerElement){
 		this.bitsPerElements = bitsPerElement;
 	}
 	
+	/**
+	 * Constructor with 2 parameters
+	 * @param setSize
+	 * @param bitsPerElement
+	 */
 	BloomFilter(int setSize, int bitsPerElement){
 		this.setSize = setSize;
 		this.bitsPerElements = bitsPerElement;
@@ -27,13 +36,17 @@ public abstract class BloomFilter {
 		
 	}
 	/**
-	 * 
+	 * Creating the k hash functions and computing the values of each hash function
 	 * @param s
-	 * @return 
+	 * @return int[]
 	 */
 	
 	public abstract int[] hashFunction(String s);
 	
+	/**
+	 * Adding a string to the bloom filter
+	 * @param s
+	 */
 	public void add(String s){
 		int[] hashValues = hashFunction(s);
 		s = s.toLowerCase();
@@ -44,11 +57,11 @@ public abstract class BloomFilter {
 	}
 	
 	
-	/**
-	 * 
-	 * @param s
-	 * @return
-	 */
+/**
+ * To check if the String s is in the bloom filter or not
+ * @param s
+ * @return boolean
+ */
 	public boolean appears(String s){
 		s = s.toLowerCase();
 		int[] hashResult = hashFunction(s);
@@ -61,7 +74,7 @@ public abstract class BloomFilter {
 	
 	
 	/**
-	 * 
+	 * Returns the filter size
 	 * @return
 	 */
 	public int filterSize(){
@@ -70,7 +83,7 @@ public abstract class BloomFilter {
 	
 	
 	/**
-	 * 
+	 * Returns the data size
 	 * @return
 	 */
 	public int dataSize(){
@@ -78,7 +91,7 @@ public abstract class BloomFilter {
 	}
 	
 	/**
-	 * 
+	 * Returns the number of hash functions
 	 * @return
 	 */
 	public int numHashes(){
