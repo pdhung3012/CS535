@@ -38,7 +38,7 @@ public class DynamicFilter extends BloomFilterRan {
 		//System.out.println("DataSize==="+dataSize+"\t Filter Size==="+filterSize +"\t check=="+((int)dataSize > (int)setSize));
 		if(dataSize > setSize) {
 			this.setSize*=2;
-			this.filterSize = setSize * this.bitsPerElements;
+			this.filterSize = this.setSize * this.bitsPerElements;
 			//System.out.println(filterSize);
 			this.filter = new BitSet(filterSize);
 			this.a = new int[filterSize];
