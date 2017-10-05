@@ -2,6 +2,7 @@ package pa1;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import util.FileIO;
 
@@ -18,23 +19,27 @@ public class FalsePositives {
 		boolean checkAppear = false;
 		String strConflict = "";
 		int[] arrNumConflict = new int[arrBf.length];
+		HashSet<String> setDataString=new HashSet<String>(); 
+		
 		for (int i = 0; i < arrNumConflict.length; i++) {
 			arrNumConflict[i] = 0;
 		}
+		
 		double[] arrFalsePositiveRate = new double[arrBf.length];
 		for (int i = 0; i < arrItem.length; i++) {
 			String strContent = arrItem[i].trim();
+			setDataString.add(strContent.toLowerCase());
 			for (int j = 0; j < arrBf.length; j++) {
 				arrBf[j].add(strContent);
 			}
 
 		}
-		
+		int numTruePos=0,numFalsePos=0,numTrueNegative=0,numFalseNegative=0;
 		for (int i = 0; i < arrQueries.length; i++) {
 			String strQuery = arrQueries[i].trim();
 			for (int j = 0; j < arrBf.length; j++) {
 				checkAppear = arrBf[j].appears(strQuery);
-				if (checkAppear) {
+				if (checkAppear && !setDataString.contains(strQueries)) {
 					arrNumConflict[j]++;
 					
 				}
@@ -51,47 +56,7 @@ public class FalsePositives {
 		return arrFalsePositiveRate;
 	}
 	
-	public double[] calculateFalPositive(String fpInput, BloomFilter... arrBf) {
-		String strInput = FileIO.readStringFromFile(fpInput);
-		String[] arrItem = strInput.split("\n");
-		boolean checkAppear = false;
-		String strConflict = "";
-		int indexConflict = -1;
-		int numberConflict = 0;
-		int[] arrNumConflict = new int[arrBf.length];
-		for (int i = 0; i < arrNumConflict.length; i++) {
-			arrNumConflict[i] = 0;
-		}
-		double[] arrFalsePositiveRate = new double[arrBf.length];
-		for (int i = 0; i < arrItem.length; i++) {
-			String strContent = arrItem[i].split("\\s+")[0];
-			for (int j = 0; j < arrBf.length; j++) {
-				checkAppear = arrBf[j].appears(strContent);
-				if (checkAppear) {
-					// strConflict = strContent;
-					// indexConflict = i + 1;
-					arrNumConflict[j]++;
-					// System.out.println("Conflict position " + indexConflict +
-					// " "
-					// + strConflict);
-				}
-				arrBf[j].add(strContent);
-			}
-
-		}
-		// if (numberConflict>0) {
-		// System.out.println("Number conflict " + numberConflict);
-		// } else {
-		// System.out.println("No conflict");
-		// }
-
-		for (int i = 0; i < arrBf.length; i++) {
-			arrFalsePositiveRate[i] = arrNumConflict[i] * 1.0 / arrItem.length;
-		}
-
-		return arrFalsePositiveRate;
-	}
-
+	
 	// calculate false poisitive rate of each hash functions
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
