@@ -2,6 +2,7 @@ package pa1;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Random;
 
 /**
  * 
@@ -15,12 +16,18 @@ public class DynamicFilter extends BloomFilterRan {
 	
 	public DynamicFilter(int bitsPerElement) {
 		super(bitsPerElement);
-		
 		this.setSize = 1000;
 		this.bitsPerElements = bitsPerElement;
 		this.filterSize = setSize * bitsPerElement;
 		this.numHashes = (int) (Math.log(2) * bitsPerElement);
 		this.filter = new BitSet(filterSize);
+		this.a = new int[filterSize];
+		this.b = new int[filterSize];
+		for(int i = 0; i < filterSize; i++) {
+			this.a[i] = new Random().nextInt(filterSize);
+			this.b[i] = new Random().nextInt(filterSize);
+			//System.out.println(a[i]+"\t"+b[i]);
+		}
 		this.dynamicFilters.add(this.filter);
 	}
 
@@ -34,6 +41,13 @@ public class DynamicFilter extends BloomFilterRan {
 			this.filterSize = setSize * this.bitsPerElements;
 			//System.out.println(filterSize);
 			filter = new BitSet(filterSize);
+			this.a = new int[filterSize];
+			this.b = new int[filterSize];
+			for(int i = 0; i < filterSize; i++) {
+				this.a[i] = new Random().nextInt(filterSize);
+				this.b[i] = new Random().nextInt(filterSize);
+				//System.out.println(a[i]+"\t"+b[i]);
+			}
 			this.dynamicFilters.add(filter);
 		}
 		int[] hashValues = hashFunction(s);
@@ -41,7 +55,7 @@ public class DynamicFilter extends BloomFilterRan {
 		for(int k = 0; k < numHashes; k++) {
 			 filter.set(hashValues[k], true);
 		}
-		dataSize++;
+		this.dataSize++;
 	}
 	
 	

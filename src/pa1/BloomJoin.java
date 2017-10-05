@@ -12,7 +12,8 @@ public class BloomJoin {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopPrefix = "data\\pa1\\";
+		//String fopPrefix = "data\\pa1\\";
+		String fopPrefix = "data/pa1/";
 		BloomJoin bj = new BloomJoin(fopPrefix + "Relation1.txt", fopPrefix
 				+ "Relation2.txt");
 		int size = 2000000, bitsPerElement = 8;

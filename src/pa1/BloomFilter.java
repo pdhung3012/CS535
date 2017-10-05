@@ -65,7 +65,7 @@ public abstract class BloomFilter {
 				 e.printStackTrace();
 			 }
 		}
-		dataSize++;
+		this.dataSize++;
 	}
 	
 	

@@ -86,12 +86,13 @@ public class FalsePositives {
 			DynamicFilter bfDyn=new DynamicFilter( bitsPerElement);
 			double[] arrResult = fp.calculateFalPositive(fpData,fpQuery, bfFNV,bfMurMur,bfRan,bfDyn);
 			int index = 0;
-			System.out.println("bitPerE = "+bitsPerElement+" FNV FP: " + arrResult[index++]);
-			System.out.println("bitPerE = "+bitsPerElement+" Mur mur FP: " + arrResult[index++]);
-			System.out.println("bitPerE = "+bitsPerElement+" Random FP: " + arrResult[index++]);
-			System.out.println("Dynamic false positive rate: " + arrResult[index++]);
+			System.out.println("Theoritical FP= "+Math.pow(0.618, bitsPerElement));
+			System.out.println("FNV FP: " + arrResult[index++]);
+			System.out.println("Mur mur FP: " + arrResult[index++]);
+			System.out.println("Random FP: " + arrResult[index++]);
+			System.out.println("Dynamic FP: " + arrResult[index++]);
 			
-			System.out.println("Dynamic Filters == "+ bfDyn.dynamicFilters.size());
+			//System.out.println("Dynamic Filters == "+ bfDyn.dynamicFilters.size());
 			
 		}
 		
