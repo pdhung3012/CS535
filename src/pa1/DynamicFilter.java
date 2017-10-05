@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class DynamicFilter extends BloomFilterRan {
 	
-	public ArrayList<BitSet> dynamicFilters = new ArrayList<BitSet>();
+	private ArrayList<BitSet> dynamicFilters = new ArrayList<BitSet>();
 	
 	public DynamicFilter(int bitsPerElement) {
 		super(bitsPerElement);
@@ -40,7 +40,7 @@ public class DynamicFilter extends BloomFilterRan {
 			this.setSize*=2;
 			this.filterSize = setSize * this.bitsPerElements;
 			//System.out.println(filterSize);
-			filter = new BitSet(filterSize);
+			this.filter = new BitSet(filterSize);
 			this.a = new int[filterSize];
 			this.b = new int[filterSize];
 			for(int i = 0; i < filterSize; i++) {
@@ -53,7 +53,7 @@ public class DynamicFilter extends BloomFilterRan {
 		int[] hashValues = hashFunction(s);
 		s = s.toLowerCase();
 		for(int k = 0; k < numHashes; k++) {
-			 filter.set(hashValues[k], true);
+			 this.filter.set(hashValues[k], true);
 		}
 		this.dataSize++;
 	}
@@ -66,7 +66,6 @@ public class DynamicFilter extends BloomFilterRan {
 		int count = 0;
 		for(int i = 0; i < numFilters; i++) {
 			BitSet filterAtI = dynamicFilters.get(i);
-			
 				for(int j = 0; j < hashRes.length; j++) {
 					try{
 					if(hashRes[j] >= filterAtI.length())
@@ -80,8 +79,6 @@ public class DynamicFilter extends BloomFilterRan {
 						throw new ArrayIndexOutOfBoundsException(ex.getMessage());
 					}
 				}
-			
-			
 		}
 		if(count == hashRes.length)
 			return true;
