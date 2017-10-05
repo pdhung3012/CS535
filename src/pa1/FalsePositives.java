@@ -39,9 +39,16 @@ public class FalsePositives {
 			String strQuery = arrQueries[i].trim();
 			for (int j = 0; j < arrBf.length; j++) {
 				checkAppear = arrBf[j].appears(strQuery);
-				if (checkAppear && !setDataString.contains(strQueries)) {
+				boolean isActuallyAppear=setDataString.contains(strQueries);
+				if (checkAppear && !isActuallyAppear) {
 					arrNumConflict[j]++;
-					
+					numFalsePos++;
+				} else if(checkAppear && isActuallyAppear){
+					numTruePos++;
+				} else if(!checkAppear && !isActuallyAppear){
+					numTrueNegative++;
+				} else if(!checkAppear && isActuallyAppear){
+					numFalseNegative++;
 				}
 				
 			}
@@ -62,8 +69,8 @@ public class FalsePositives {
 		// TODO Auto-generated method stub
 //		String fpData = "data\\pa1\\words2.txt";
 //		String fpQuery = "data\\pa1\\query.txt";
-		String fpData = "data"+File.separator+"pa1"+File.separator+"data.txt";
-		String fpQuery = "data"+File.separator+"pa1"+File.separator+"q.txt";
+		String fpData = "data"+File.separator+"pa1"+File.separator+"data_2.txt";
+		String fpQuery = "data"+File.separator+"pa1"+File.separator+"q_2.txt";
 		FalsePositives fp = new FalsePositives();
 
 		

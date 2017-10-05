@@ -2,6 +2,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -58,12 +59,12 @@ public class Utility {
 			
 			System.out.println("Data "+setData.size());
 		}
-		FileIO.writeStringToFile(strData.toString(), "data/pa1/data.txt");
+		FileIO.writeStringToFile(strData.toString(), "data"+File.pathSeparator+"pa1"+File.pathSeparator+"data_2.txt");
 		System.out.println( "Done step 1");
 		
 		StringBuilder strQuery=new StringBuilder();
 		HashSet<String> setQuery=new HashSet<String>();		
-		while(setQuery.size()<numberHash/sizeSyn){
+		while(setQuery.size()<numberHash/(2*sizeSyn)){
 			String strOrigin=gen.nextString();
 			
 
@@ -80,11 +81,33 @@ public class Utility {
 				}
 				
 			}
-			
-			
+						
 			System.out.println("Query "+setQuery.size());
 		}
-		FileIO.writeStringToFile(strQuery.toString(), "data/pa1/q.txt");
+		
+		for(String strOrigin:setData){
+			setQuery.add(strOrigin);
+			if(sizeSyn==1){
+				strQuery.append(strOrigin+"\n");
+			} else{
+				for(int i=1;i<=sizeSyn;i++){
+					String strItem=strOrigin+String.format("%05d", i);
+					strQuery.append(strItem+"\n");	
+
+				}
+			}
+			
+			if(setQuery.size()==numberHash/sizeSyn){
+				break;
+			}
+				
+			
+		}
+		//while(setQuery.size()<numberHash/sizeSyn){
+			//String strOrigin=gen.nextString();
+
+		
+		FileIO.writeStringToFile(strQuery.toString(), "data"+File.pathSeparator+"pa1"+File.pathSeparator+"q_2.txt");
 		
 		
 		System.out.println("Done");
