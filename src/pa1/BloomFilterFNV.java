@@ -32,9 +32,9 @@ public class BloomFilterFNV extends BloomFilter {
 		setSource = new HashSet<String>();
 		System.out.println("Filter size " + filterSize);
 		System.out.println("Number of hash " + numHashes);
-		for (int i = 0; i < filterSize; i++) {
-			filter[i] = 0;
-		}
+//		for (int i = 0; i < filterSize; i++) {
+//			filter[i] = 0;
+//		}
 	}
 
 	public long hash64(byte[] data) {
@@ -87,7 +87,7 @@ public class BloomFilterFNV extends BloomFilter {
 		int[] arrResult = hashFunction(s);
 		for (int i = 0; i < arrResult.length; i++) {
 			try {
-				filter[arrResult[i]] = 1;
+				filter.set(arrResult[i],true);
 			} catch (Exception ex) {
 				System.out.println(arrResult[i] + " err");
 				ex.printStackTrace();
@@ -113,7 +113,7 @@ public class BloomFilterFNV extends BloomFilter {
 
 		for (int i = 0; i < arrResult.length; i++) {
 			try {
-				if (filter[arrResult[i]] != 1) {
+				if (!filter.get(arrResult[i])) {
 					isAppeared = false;
 					break;
 				}

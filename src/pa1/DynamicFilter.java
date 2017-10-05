@@ -1,6 +1,7 @@
 package pa1;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 
 /**
  * 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class DynamicFilter extends BloomFilterRan {
 	
-	public ArrayList<byte[]> dynamicFilters = new ArrayList<byte[]>();
+	public ArrayList<BitSet> dynamicFilters = new ArrayList<BitSet>();
 	
 	public DynamicFilter(int bitsPerElement) {
 		super(bitsPerElement);
@@ -19,7 +20,7 @@ public class DynamicFilter extends BloomFilterRan {
 		this.bitsPerElements = bitsPerElement;
 		this.filterSize = setSize * bitsPerElement;
 		this.numHashes = (int) (Math.log(2) * bitsPerElement);
-		this.filter = new byte[filterSize];
+		this.filter = new BitSet(filterSize);
 		this.dynamicFilters.add(this.filter);
 	}
 
@@ -32,13 +33,13 @@ public class DynamicFilter extends BloomFilterRan {
 			this.setSize*=2;
 			this.filterSize = setSize * this.bitsPerElements;
 			//System.out.println(filterSize);
-			filter = new byte[filterSize];
+			filter = new BitSet(filterSize);
 			this.dynamicFilters.add(filter);
 		}
 		int[] hashValues = hashFunction(s);
 		s = s.toLowerCase();
 		for(int k = 0; k < numHashes; k++) {
-			 filter[hashValues[k]] = 1;
+			 filter.set(hashValues[k], true);
 		}
 		dataSize++;
 	}
@@ -50,18 +51,18 @@ public class DynamicFilter extends BloomFilterRan {
 		int[] hashRes = hashFunction(s);
 		int count = 0;
 		for(int i = 0; i < numFilters; i++) {
-			byte[] filterAtI = dynamicFilters.get(i);
+			BitSet filterAtI = dynamicFilters.get(i);
 			
 				for(int j = 0; j < hashRes.length; j++) {
 					try{
-					if(hashRes[j] >= filterAtI.length)
+					if(hashRes[j] >= filterAtI.length())
 						break;
-					else if(filterAtI[hashRes[j]] == 0)
+					else if(!filterAtI.get(hashRes[j]))
 						break;
 					else
 						count++;
 					}catch(Exception ex){
-						System.out.println(hashRes[j]+"\t"+filterAtI.length+"\t"+filterSize+"\t"+j);
+						System.out.println(hashRes[j]+"\t"+filterAtI.length()+"\t"+filterSize+"\t"+j);
 						throw new ArrayIndexOutOfBoundsException(ex.getMessage());
 					}
 				}

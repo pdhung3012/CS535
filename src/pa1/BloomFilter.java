@@ -1,4 +1,7 @@
 package pa1;
+
+import java.util.BitSet;
+
 /**
  * 
  * @author Shruti sahu
@@ -9,7 +12,7 @@ public abstract class BloomFilter {
 	
 	protected int filterSize;
 	protected int numHashes;
-	protected byte[] filter;
+	protected BitSet filter;
 	protected int setSize;
 	protected int bitsPerElements;
 	protected int dataSize;
@@ -32,7 +35,7 @@ public abstract class BloomFilter {
 		this.bitsPerElements = bitsPerElement;
 		this.filterSize = setSize * bitsPerElement;
 		this.numHashes = (int) (Math.log(2) * bitsPerElement);
-		this.filter = new byte[filterSize];
+		this.filter = new BitSet(filterSize);
 		
 	}
 	/**
@@ -51,10 +54,10 @@ public abstract class BloomFilter {
 		int[] hashValues = hashFunction(s);
 		s = s.toLowerCase();
 		for(int k = 0; k < numHashes; k++) {
-			if(hashValues[k]> filter.length )
-				System.out.println(hashValues[k]+ " filter"+ filter.length );
+			if(hashValues[k]> filter.size() )
+				System.out.println(hashValues[k]+ " filter"+ filter.size() );
 			try {
-				this.filter[hashValues[k]] = 1;
+				this.filter.set(hashValues[k],true);
 			}
 			 catch(Exception e) {
 				 System.out.println(this.getClass().getName());
@@ -75,7 +78,7 @@ public abstract class BloomFilter {
 		s = s.toLowerCase();
 		int[] hashResult = hashFunction(s);
 		for(int i = 0; i < hashResult.length; i++) {
-			if(filter[hashResult[i]] == 0) 
+			if(!filter.get(hashResult[i])) 
 				return false;	
 		}
 		return true;

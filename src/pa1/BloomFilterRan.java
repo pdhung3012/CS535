@@ -1,6 +1,7 @@
 package pa1;
 
 import java.math.BigInteger;
+import java.util.BitSet;
 import java.util.Random;
 /**
  * 
@@ -13,7 +14,7 @@ public class BloomFilterRan extends BloomFilter {
 	public BloomFilterRan(int setSize, int bitsPerElement) {
 		super(setSize, bitsPerElement);
 		this.filterSize =  pickPrime();
-		this.filter = new byte[filterSize];
+		this.filter = new BitSet(filterSize);
 		//System.out.println("filterSize=="+filterSize);
 		// TODO Auto-generated constructor stub
 	}
