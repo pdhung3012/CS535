@@ -64,6 +64,8 @@ public class FalsePositives {
 	}
 	
 	
+	
+	
 	// calculate false poisitive rate of each hash functions
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -71,13 +73,15 @@ public class FalsePositives {
 //		String fpQuery = "data\\pa1\\query.txt";
 		String fpData = "data"+File.separator+"pa1"+File.separator+"data_2.txt";
 		String fpQuery = "data"+File.separator+"pa1"+File.separator+"q_2.txt";
+		String[] arrContent=FileIO.readStringFromFile(fpQuery).trim().split("\n");
+		int dataLength=arrContent.length;
 		FalsePositives fp = new FalsePositives();
 
 		
 		for(int i=1;i<=3;i++){
 			// FNV false positive
 			
-			int size = 500000; 
+			int size = dataLength; 
 			int bitsPerElement =(int) Math.pow(2, 1+i);		
 			
 			BloomFilterFNV bfFNV = new BloomFilterFNV(size, bitsPerElement);

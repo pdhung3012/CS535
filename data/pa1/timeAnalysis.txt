@@ -1,0 +1,40 @@
+Filter size 2000000
+Number of hash 2
+Bit per element 4
+Add
+989.7
+344.8
+162.4
+1212.5
+Search
+830.9
+404.4
+206.4
+202.1
+Filter size 4000000
+Number of hash 5
+Bit per element 8
+Add
+2936.1
+729.3
+243.9
+2537.5
+Search
+2735.6
+748.4
+241.7
+250.5
+Filter size 8000000
+Number of hash 11
+Bit per element 16
+Add
+7883.5
+1601.2
+431.0
+5497.2
+Search
+11241.2
+1732.2
+352.7
+572.0
+Picked up _JAVA_OPTIONS: -Djava.net.preferIPv4Stack=true
