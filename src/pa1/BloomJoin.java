@@ -14,15 +14,25 @@ public class BloomJoin {
 		// TODO Auto-generated method stub
 		//String fopPrefix = "data\\pa1\\";
 		String fopPrefix = "data/pa1/";
-		BloomJoin bj = new BloomJoin(fopPrefix + "Relation1.txt", fopPrefix
-				+ "Relation2.txt");
+		String fpRe1=fopPrefix + "Relation1.txt",fpRe2=fopPrefix
+				+ "Relation2.txt",fpRe3=fopPrefix + "R3.txt",fpRe3Validate=fopPrefix + "R3Validate.txt";
+		
+		if(args.length>=4){
+			fpRe1=args[0];
+			fpRe2=args[1];
+			fpRe3=args[2];
+			fpRe3Validate=args[3];
+		}
+		
+		BloomJoin bj = new BloomJoin(fpRe1, 
+				fpRe2);
 		int size = 2000000, bitsPerElement = 8;
 		BloomFilterFNV bfr = new BloomFilterFNV(size, bitsPerElement);
 
 		bj.doAction(bfr);
-		bj.join(fopPrefix + "R3.txt");
+		bj.join(fpRe3);
 		
-		bj.validateAction(fopPrefix + "R3Validate.txt");
+		bj.validateAction(fpRe3);
 
 	}
 

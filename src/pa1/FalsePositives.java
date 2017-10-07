@@ -71,8 +71,15 @@ public class FalsePositives {
 		// TODO Auto-generated method stub
 //		String fpData = "data\\pa1\\words2.txt";
 //		String fpQuery = "data\\pa1\\query.txt";
+		
 		String fpData = "data"+File.separator+"pa1"+File.separator+"data_2.txt";
 		String fpQuery = "data"+File.separator+"pa1"+File.separator+"q_2.txt";
+		
+		if(args.length>=2){
+			fpData=args[0];
+			fpQuery=args[1];
+		}
+		
 		String[] arrContent=FileIO.readStringFromFile(fpQuery).trim().split("\n");
 		int dataLength=arrContent.length;
 		FalsePositives fp = new FalsePositives();

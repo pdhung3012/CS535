@@ -91,6 +91,13 @@ public class TimeAnalysis {
 		// TODO Auto-generated method stub
 		String fpData = "data"+File.separator+"pa1"+File.separator+"data_2.txt";
 		String fpQuery = "data"+File.separator+"pa1"+File.separator+"q_2.txt";
+		
+		
+		if(args.length>=2){
+			fpData=args[0];
+			fpQuery=args[1];
+		}
+		
 		TimeAnalysis ta = new TimeAnalysis();
 		String[] arrContent=FileIO.readStringFromFile(fpQuery).trim().split("\n");
 		int dataLength=arrContent.length;
