@@ -32,7 +32,7 @@ public class BloomJoin {
 		bj.doAction(bfr);
 		bj.join(fpRe3);
 		
-		bj.validateAction(fpRe3);
+		bj.validateAction(fpRe3Validate);
 
 	}
 
