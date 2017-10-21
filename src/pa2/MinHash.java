@@ -1,15 +1,20 @@
 package pa2;
 
+import java.io.File;
+
 public class MinHash {
 
 	private String folder;
 	private int numPermutations;
-	
+	private String[] allDocs;
+	File[] arrFiles;
 	
 	
 	public MinHash(String folder,int numPermutations){
 		this.folder=folder;
 		this.numPermutations=numPermutations;
+		File fileFolderArticle = new File(folder);
+		arrFiles= fileFolderArticle.listFiles();
 	}
 	
 	
@@ -26,9 +31,7 @@ public class MinHash {
 
 
 
-	public String[] allDocs(){
-		return null;
-	}
+	
 	
 	public double extractJaccard(String file1,String file2){
 		double result=0;
