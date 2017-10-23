@@ -194,11 +194,26 @@ public class MinHash {
 	}
 
 	public int[][] minHashMatrix() {
-		return null;
+		int[][] arrResult=new int[numPermutations][allDocs.length];
+		setVocabularies=new HashSet<>();
+		for(int i=0;i<allDocs.length;i++){
+			ArrayList<String> lstWordFileI=removeAllStopWords(folder+allDocs[i]);
+			for(String str:lstWordFileI){
+				setVocabularies.add(str);
+			}
+		}
+		
+		for(int i=0;i<allDocs.length;i++){
+			int[] mh1=minHashSig(allDocs[i]);
+			for(int j=0;j<mh1.length;j++){
+				arrResult[j][i]=mh1[j];
+			}
+		}
+		return arrResult;
 	}
 
 	public int numTerms() {
-		return 0;
+		return setVocabularies.size();
 	}
 
 	public static void main(String[] args) {
