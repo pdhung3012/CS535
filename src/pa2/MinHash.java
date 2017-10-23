@@ -12,6 +12,9 @@ public class MinHash {
 	private String folder;
 	private int numPermutations;
 	private String[] allDocs;
+	private int[][] arrBinaryMatrix;
+	private int[][] arrHashSig;
+	
 	HashSet<String> setVocabularies;
 	File[] arrFiles;
 	int []a,b,c;
@@ -19,6 +22,16 @@ public class MinHash {
 	public MinHash(String folder, int numPermutations) {
 		this.folder = folder;
 		this.numPermutations = numPermutations;
+		
+		a=new int[numPermutations];
+		b=new int[numPermutations];
+		for(int i=1;i<=numPermutations;i++){
+			a[i-1]=i;
+			b[i-1]=i+1;
+		}
+		c=getListFirstPrime();
+		
+		
 		File fileFolderArticle = new File(folder);
 		arrFiles = fileFolderArticle.listFiles(new FileFilter() {
 
@@ -32,9 +45,41 @@ public class MinHash {
 			}
 		});
 		allDocs = new String[arrFiles.length];
+		setVocabularies=new HashSet<String>();
+		
 		for (int i = 0; i < arrFiles.length; i++) {
 			allDocs[i] = arrFiles[i].getName();
+			ArrayList<String> lstWords=removeAllStopWords(folder+allDocs[i]);
+			for (String strItem : lstWords) {
+				setVocabularies.add(strItem);
+			}
+			//System.out.println(i+" "+arrFiles.length+" vocab size "+setVocabularies.size());
 		}
+		System.out.println("vocab of "+allDocs.length+" doc is "+setVocabularies.size());
+		
+		arrBinaryMatrix=new int[setVocabularies.size()][allDocs.length];
+		for (int i = 0; i < allDocs.length; i++) {
+			ArrayList<String> lstWordFileI = removeAllStopWords(folder + allDocs[i]);			
+			int[] vectorFileI = getVectorFromVocabAndFile(setVocabularies,
+					lstWordFileI);
+			for(int j=0;j<vectorFileI.length;j++){
+				arrBinaryMatrix[j][i]=vectorFileI[j];
+			}
+			//System.out.println("end doc "+i);
+		}
+		System.out.println("end doc ");
+		arrHashSig=new int[numPermutations][allDocs.length];
+		for (int i = 0; i < allDocs.length; i++) {
+			
+			int[] arrResult=minHashSig(allDocs[i]);
+			for(int j=0;j<arrResult.length;j++){
+				arrHashSig[j][i]=arrResult[j];
+			}
+			//System.out.println("end hash doc "+i);
+		
+		}
+		System.out.println("end hash doc ");
+		
 	}
 	
 	private int[] getListFirstPrime(){
@@ -57,6 +102,15 @@ public class MinHash {
 		}
 		return arrResult;
 	}
+	
+	public String[] getAllDocs() {
+		return allDocs;
+	}
+
+	public void setAllDocs(String[] allDocs) {
+		this.allDocs = allDocs;
+	}
+
 
 	public int getNumPermutations() {
 		return numPermutations;
@@ -66,6 +120,17 @@ public class MinHash {
 		this.numPermutations = numPermutations;
 	}
 
+	private int getIndexOfDoc(String fileName){
+		int result=-1;
+		for(int i=0;i<allDocs.length;i++){
+			if(fileName.equals(allDocs[i])){
+				result=i;
+				break;
+			}
+		}
+		return result;
+	}
+	
 	private ArrayList<String> removeAllStopWords(String filePath) {
 		String content = FileIO.readStringFromFile(filePath);
 		
@@ -122,15 +187,26 @@ public class MinHash {
 
 	public double extractJaccard(String file1, String file2) {
 		double result = 0;
-		ArrayList<String> lstWordFile1 = removeAllStopWords(folder + file1);
-		ArrayList<String> lstWordFile2 = removeAllStopWords(folder + file2);
-		setVocabularies = getVocabulary(lstWordFile1,
-				lstWordFile2);
-		int[] vectorFile1 = getVectorFromVocabAndFile(setVocabularies,
-				lstWordFile1);
-		int[] vectorFile2 = getVectorFromVocabAndFile(setVocabularies,
-				lstWordFile2);
-	//	System.out.println("file length "+vectorFile1.length+" "+vectorFile2.length);
+//		ArrayList<String> lstWordFile1 = removeAllStopWords(folder + file1);
+//		ArrayList<String> lstWordFile2 = removeAllStopWords(folder + file2);
+//		setVocabularies = getVocabulary(lstWordFile1,
+//				lstWordFile2);
+//		int[] vectorFile1 = getVectorFromVocabAndFile(setVocabularies,
+//				lstWordFile1);
+//		int[] vectorFile2 = getVectorFromVocabAndFile(setVocabularies,
+//				lstWordFile2);
+		
+		int index1=getIndexOfDoc(file1);
+		int index2=getIndexOfDoc(file2);
+		
+		int[] vectorFile1 = new int[setVocabularies.size()];
+		int[] vectorFile2 = new int[setVocabularies.size()];
+		
+		for(int i=0;i<setVocabularies.size();i++){
+			vectorFile1[i]=arrBinaryMatrix[i][index1];
+			vectorFile2[i]=arrBinaryMatrix[i][index2];
+		}
+		
 		double dotProductAB = 0, lASquare = 0, lBSquare = 0;
 		for (int i = 0; i < vectorFile1.length; i++) {
 			dotProductAB += vectorFile1[i] * vectorFile2[i];
@@ -148,14 +224,19 @@ public class MinHash {
 	}
 
 	public int[] minHashSig(String fileName) {
-		ArrayList<String> lstWordFile1 = removeAllStopWords(folder + fileName);		
-		int[] vectorFile1 = getVectorFromVocabAndFile(setVocabularies,
-				lstWordFile1);
+		//ArrayList<String> lstWordFile1 = removeAllStopWords(folder + fileName);		
+		int indexI=getIndexOfDoc(fileName);
+		
+		
+		int[] vectorFileI = new int[setVocabularies.size()];
+		for(int i=0;i<setVocabularies.size();i++){
+			vectorFileI[i]=arrBinaryMatrix[i][indexI];
+		}
 		int[] arrResult=new int[numPermutations];
 		for(int indexHash=1;indexHash<=numPermutations;indexHash++){
 			int minValue=10000000;			
-			for(int i=0;i<vectorFile1.length;i++){
-				if(vectorFile1[i]==1){
+			for(int i=0;i<vectorFileI.length;i++){
+				if(vectorFileI[i]==1){
 					int value=getHash(i+1, indexHash);
 					if(value<minValue){
 						minValue=value;
@@ -170,21 +251,14 @@ public class MinHash {
 
 	public double approximateJaccard(String file1, String file2) {
 		double result = 0;		
-		a=new int[numPermutations];
-		b=new int[numPermutations];
-		for(int i=1;i<=numPermutations;i++){
-			a[i-1]=i;
-			b[i-1]=i+1;
-		}
-		c=getListFirstPrime();
-		ArrayList<String> lstWordFile1 = removeAllStopWords(folder + file1);
-		ArrayList<String> lstWordFile2 = removeAllStopWords(folder + file2);
-		setVocabularies = getVocabulary(lstWordFile1,
-				lstWordFile2);
-		int[] mh1 = minHashSig(file1);
-		int[] mh2 = minHashSig(file2);
+		int index1=getIndexOfDoc(file1);
+		int index2=getIndexOfDoc(file2);
+		int[] mh1 = new int[numPermutations];
+		int[] mh2 = new int[numPermutations];
 		
 		for(int i=0;i<mh1.length;i++){
+			mh1[i]=arrHashSig[i][index1];
+			mh2[i]=arrHashSig[i][index2];
 			if(mh1[i]==mh2[i]){
 				result++;
 			}
@@ -221,6 +295,7 @@ public class MinHash {
 		String folderPath = "data" + File.separator
 				+ "pa2" + File.separator + "articles" + File.separator;
 		File folder = new File(folderPath);
+		int numOfPermutations = 400;
 		System.out.println(folderPath);
 		File[] arrFiles = folder.listFiles();
 		String strResultExact="",strResultApprox="";
@@ -228,12 +303,13 @@ public class MinHash {
 				+ "pa2" + File.separator + "results" + File.separator+"testExactJaccard.txt";
 		String fpResultApproxsJaccard="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"testApproxJaccard.txt";
+		MinHash mh = new MinHash(folderPath, numOfPermutations);
 		for(int i=0;i<arrFiles.length-1;i++){
 			String fileName1 = arrFiles[i].getName();
 			String fileName2 = arrFiles[i+1].getName();
-			int numOfPermutations = 400;
+			
 			//System.out.println(fileName1 + " " + fileName2);
-			MinHash mh = new MinHash(folderPath, numOfPermutations);
+			
 			double resultExact = mh.extractJaccard(fileName1, fileName2);
 			double resultApprox = mh.approximateJaccard(fileName1, fileName2);
 			if(resultExact>0){
