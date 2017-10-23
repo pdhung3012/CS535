@@ -9,9 +9,9 @@ public class MinHashAccuracy {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String folderPath = "data" + File.separator
-				+ "pa2" + File.separator + "articles" + File.separator;
-		int numPermutations=400;
-		double errorParam=0.1;
+				+ "pa2" + File.separator + "space" + File.separator;
+		int numPermutations=800;
+		double errorParam=0.07;
 		MinHashAccuracy mha=new MinHashAccuracy();
 		mha.accuracy(folderPath, numPermutations, errorParam);
 		
@@ -22,7 +22,7 @@ public class MinHashAccuracy {
 		
 		//File folder = new File(folderPath);
 		System.out.println(folder);
-		String strPairToPairCompare="";
+		StringBuilder strPairToPairCompare=new StringBuilder();
 		String fpResultExactJaccard="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"comparePairToPair.txt";
 		MinHash mh=new MinHash(folder, numPermutations);
@@ -36,19 +36,19 @@ public class MinHashAccuracy {
 				double offset=Math.abs(exactJaccard-approxJaccard);
 				numCompare++;
 				boolean isExceed=false;
-				if(offset>=errorParameter){
+				if(offset>errorParameter){
 					numExceed++;
 					isExceed=true;
 				}
-				strPairToPairCompare+=docs[i]+"\t"+docs[j]+"\t"+exactJaccard+"\t"+approxJaccard+"\t"+isExceed+"\n";
+				strPairToPairCompare.append(docs[i]+"\t"+docs[j]+"\t"+exactJaccard+"\t"+approxJaccard+"\t"+isExceed+"\n");
 				
 			}
 			System.out.println(docs[i]+"\t"+i);
 			System.out.println("Percentage exceed: "+numExceed+"/"+numCompare+"="+(numExceed*1.0/numCompare));
 		}
-		strPairToPairCompare+="Percentage exceed: "+numExceed+"/"+numCompare+"="+(numExceed*1.0/numCompare)+"\n";
+		strPairToPairCompare.append("Percentage exceed: "+numExceed+"/"+numCompare+"="+(numExceed*1.0/numCompare)+"\n");
 		
-		FileIO.writeStringToFile(strPairToPairCompare, fpResultExactJaccard);
+		FileIO.writeStringToFile(strPairToPairCompare.toString(), fpResultExactJaccard);
 		return result;
 	}
 

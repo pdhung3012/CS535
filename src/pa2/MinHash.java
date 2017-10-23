@@ -38,7 +38,7 @@ public class MinHash {
 			@Override
 			public boolean accept(File pathname) {
 				// TODO Auto-generated method stub
-				if (pathname.isFile()) {
+				if (pathname.isFile()&&pathname.getName().endsWith(".txt")) {
 					return true;
 				}
 				return false;
@@ -48,8 +48,9 @@ public class MinHash {
 		setVocabularies=new HashSet<String>();
 		
 		for (int i = 0; i < arrFiles.length; i++) {
-			allDocs[i] = arrFiles[i].getName();
-			ArrayList<String> lstWords=removeAllStopWords(folder+allDocs[i]);
+			int index=getIndexOfDoc(arrFiles[i].getName());
+			allDocs[index] = arrFiles[i].getName();
+			ArrayList<String> lstWords=removeAllStopWords(folder+allDocs[index]);
 			for (String strItem : lstWords) {
 				setVocabularies.add(strItem);
 			}
@@ -57,24 +58,27 @@ public class MinHash {
 		}
 		System.out.println("vocab of "+allDocs.length+" doc is "+setVocabularies.size());
 		
-		arrBinaryMatrix=new int[setVocabularies.size()][allDocs.length];
+		arrBinaryMatrix=new int[allDocs.length][setVocabularies.size()];
 		for (int i = 0; i < allDocs.length; i++) {
 			ArrayList<String> lstWordFileI = removeAllStopWords(folder + allDocs[i]);			
 			int[] vectorFileI = getVectorFromVocabAndFile(setVocabularies,
 					lstWordFileI);
-			for(int j=0;j<vectorFileI.length;j++){
-				arrBinaryMatrix[j][i]=vectorFileI[j];
-			}
+			int index=getIndexOfDoc(allDocs[i]);
+			arrBinaryMatrix[index]=vectorFileI;
+//			for(int j=0;j<vectorFileI.length;j++){
+//				arrBinaryMatrix[j][i]=vectorFileI[j];
+//			}
 			//System.out.println("end doc "+i);
 		}
 		System.out.println("end doc ");
-		arrHashSig=new int[numPermutations][allDocs.length];
+		arrHashSig=new int[allDocs.length][numPermutations];
 		for (int i = 0; i < allDocs.length; i++) {
 			
 			int[] arrResult=minHashSig(allDocs[i]);
-			for(int j=0;j<arrResult.length;j++){
-				arrHashSig[j][i]=arrResult[j];
-			}
+			arrHashSig[i]=arrResult;
+//			for(int j=0;j<arrResult.length;j++){
+//				arrHashSig[j][i]=arrResult[j];
+//			}
 			//System.out.println("end hash doc "+i);
 		
 		}
@@ -122,12 +126,13 @@ public class MinHash {
 
 	private int getIndexOfDoc(String fileName){
 		int result=-1;
-		for(int i=0;i<allDocs.length;i++){
-			if(fileName.equals(allDocs[i])){
-				result=i;
-				break;
-			}
-		}
+		result=Integer.parseInt(fileName.replaceAll(".txt","").replaceAll("space-",""));
+//		for(int i=0;i<allDocs.length;i++){
+//			if(fileName.equals(allDocs[i])){
+//				result=i;
+//				break;
+//			}
+//		}
 		return result;
 	}
 	
@@ -199,14 +204,15 @@ public class MinHash {
 		int index1=getIndexOfDoc(file1);
 		int index2=getIndexOfDoc(file2);
 		
-		int[] vectorFile1 = new int[setVocabularies.size()];
-		int[] vectorFile2 = new int[setVocabularies.size()];
-		
-		for(int i=0;i<setVocabularies.size();i++){
-			vectorFile1[i]=arrBinaryMatrix[i][index1];
-			vectorFile2[i]=arrBinaryMatrix[i][index2];
-		}
-		
+//		int[] vectorFile1 = new int[setVocabularies.size()];
+//		int[] vectorFile2 = new int[setVocabularies.size()];
+//		
+//		for(int i=0;i<setVocabularies.size();i++){
+//			vectorFile1[i]=arrBinaryMatrix[i][index1];
+//			vectorFile2[i]=arrBinaryMatrix[i][index2];
+//		}
+		int[] vectorFile1 = arrBinaryMatrix[index1];
+		int[] vectorFile2 = arrBinaryMatrix[index2];
 		double dotProductAB = 0, lASquare = 0, lBSquare = 0;
 		for (int i = 0; i < vectorFile1.length; i++) {
 			dotProductAB += vectorFile1[i] * vectorFile2[i];
@@ -228,10 +234,10 @@ public class MinHash {
 		int indexI=getIndexOfDoc(fileName);
 		
 		
-		int[] vectorFileI = new int[setVocabularies.size()];
-		for(int i=0;i<setVocabularies.size();i++){
-			vectorFileI[i]=arrBinaryMatrix[i][indexI];
-		}
+		int[] vectorFileI = arrBinaryMatrix[indexI];
+//		for(int i=0;i<setVocabularies.size();i++){
+//			vectorFileI[i]=arrBinaryMatrix[i][indexI];
+//		}
 		int[] arrResult=new int[numPermutations];
 		for(int indexHash=1;indexHash<=numPermutations;indexHash++){
 			int minValue=10000000;			
@@ -253,12 +259,12 @@ public class MinHash {
 		double result = 0;		
 		int index1=getIndexOfDoc(file1);
 		int index2=getIndexOfDoc(file2);
-		int[] mh1 = new int[numPermutations];
-		int[] mh2 = new int[numPermutations];
+		int[] mh1 =arrHashSig[index1];
+		int[] mh2 = arrHashSig[index2];
 		
 		for(int i=0;i<mh1.length;i++){
-			mh1[i]=arrHashSig[i][index1];
-			mh2[i]=arrHashSig[i][index2];
+//			mh1[i]=arrHashSig[i][index1];
+//			mh2[i]=arrHashSig[i][index2];
 			if(mh1[i]==mh2[i]){
 				result++;
 			}
