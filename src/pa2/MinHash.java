@@ -133,7 +133,7 @@ public class MinHash {
 	//	System.out.println("file length "+vectorFile1.length+" "+vectorFile2.length);
 		double dotProductAB = 0, lASquare = 0, lBSquare = 0;
 		for (int i = 0; i < vectorFile1.length; i++) {
-			dotProductAB = vectorFile1[i] * vectorFile2[i];
+			dotProductAB += vectorFile1[i] * vectorFile2[i];
 			lASquare += vectorFile1[i] * vectorFile1[i];
 			lBSquare += vectorFile2[i] * vectorFile2[i];
 		}
@@ -174,7 +174,7 @@ public class MinHash {
 		b=new int[numPermutations];
 		for(int i=1;i<=numPermutations;i++){
 			a[i-1]=i;
-			b[i-1]=i+3;
+			b[i-1]=i+1;
 		}
 		c=getListFirstPrime();
 		ArrayList<String> lstWordFile1 = removeAllStopWords(folder + file1);
@@ -228,6 +228,7 @@ public class MinHash {
 			if(resultApprox>0){
 				System.out.println("Approx\t"+fileName1 + "\t" + fileName2 + "\t" + resultApprox);
 				strResultApprox+=fileName1 + "\t" + fileName2 + "\t" + resultApprox+"\n";
+				//break;
 			}
 			
 		}
