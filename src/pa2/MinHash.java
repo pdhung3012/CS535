@@ -86,6 +86,19 @@ public class MinHash {
 		
 	}
 	
+	public long calculateTimeForMinHash(){
+		long startTime,endTime;
+		startTime=System.currentTimeMillis();
+		arrHashSig=new int[allDocs.length][numPermutations];
+		for (int i = 0; i < allDocs.length; i++) {
+			
+			int[] arrResult=minHashSig(allDocs[i]);
+			arrHashSig[i]=arrResult;		
+		}
+		endTime=System.currentTimeMillis();
+		return (endTime-startTime);
+	}
+	
 	private int[] getListFirstPrime(){
 		int[] arrResult=new int[numPermutations];
 		int indexCountPrime=1;

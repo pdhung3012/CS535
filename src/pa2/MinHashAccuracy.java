@@ -11,7 +11,7 @@ public class MinHashAccuracy {
 		String folderPath = "data" + File.separator
 				+ "pa2" + File.separator + "space" + File.separator;
 		int numPermutations=800;
-		double errorParam=0.07;
+		double errorParam=0.09;
 		MinHashAccuracy mha=new MinHashAccuracy();
 		mha.accuracy(folderPath, numPermutations, errorParam);
 		
