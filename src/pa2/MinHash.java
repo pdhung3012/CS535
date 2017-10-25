@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 import util.FileIO;
 
@@ -12,8 +13,9 @@ public class MinHash {
 	private String folder;
 	private int numPermutations;
 	private String[] allDocs;
-	private int[][] arrBinaryMatrix;
+	//private int[][] arrBinaryMatrix;
 	private int[][] arrHashSig;
+	private Hashtable<String,ArrayList<String>> tableWordForFile;
 	
 	HashSet<String> setVocabularies;
 	File[] arrFiles;
@@ -38,10 +40,10 @@ public class MinHash {
 			@Override
 			public boolean accept(File pathname) {
 				// TODO Auto-generated method stub
-				if (pathname.isFile()&&pathname.getName().endsWith(".txt")) {
-					return true;
+				if (pathname.isFile()&&pathname.getName().startsWith(".")) {
+					return false;
 				}
-				return false;
+				return true;
 			}
 		});
 		allDocs = new String[arrFiles.length];
@@ -58,13 +60,15 @@ public class MinHash {
 		}
 		System.out.println("vocab of "+allDocs.length+" doc is "+setVocabularies.size());
 		
-		arrBinaryMatrix=new int[allDocs.length][setVocabularies.size()];
+		tableWordForFile=new Hashtable<String, ArrayList<String>>();
+//		arrBinaryMatrix=new int[allDocs.length][setVocabularies.size()];
 		for (int i = 0; i < allDocs.length; i++) {
 			ArrayList<String> lstWordFileI = removeAllStopWords(folder + allDocs[i]);			
-			int[] vectorFileI = getVectorFromVocabAndFile(setVocabularies,
-					lstWordFileI);
-			int index=getIndexOfDoc(allDocs[i]);
-			arrBinaryMatrix[index]=vectorFileI;
+			tableWordForFile.put(allDocs[i], lstWordFileI);
+//			int[] vectorFileI = getVectorFromVocabAndFile(setVocabularies,
+//					lstWordFileI);
+//			int index=getIndexOfDoc(allDocs[i]);
+//			arrBinaryMatrix[index]=vectorFileI;
 //			for(int j=0;j<vectorFileI.length;j++){
 //				arrBinaryMatrix[j][i]=vectorFileI[j];
 //			}
@@ -79,7 +83,7 @@ public class MinHash {
 			for(int j=0;j<arrResult.length;j++){
 				arrHashSig[j][i]=arrResult[j];
 			}
-			//System.out.println("end hash doc "+i);
+			System.out.println("end hash doc "+i);
 		
 		}
 		System.out.println("end hash doc ");
@@ -214,8 +218,8 @@ public class MinHash {
 //		int[] vectorFile2 = getVectorFromVocabAndFile(setVocabularies,
 //				lstWordFile2);
 		
-		int index1=getIndexOfDoc(file1);
-		int index2=getIndexOfDoc(file2);
+//		int index1=getIndexOfDoc(file1);
+//		int index2=getIndexOfDoc(file2);
 		
 //		int[] vectorFile1 = new int[setVocabularies.size()];
 //		int[] vectorFile2 = new int[setVocabularies.size()];
@@ -224,8 +228,8 @@ public class MinHash {
 //			vectorFile1[i]=arrBinaryMatrix[i][index1];
 //			vectorFile2[i]=arrBinaryMatrix[i][index2];
 //		}
-		int[] vectorFile1 = arrBinaryMatrix[index1];
-		int[] vectorFile2 = arrBinaryMatrix[index2];
+		int[] vectorFile1 = getVectorFromVocabAndFile(setVocabularies,tableWordForFile.get(file1));;
+		int[] vectorFile2 = getVectorFromVocabAndFile(setVocabularies,tableWordForFile.get(file2));;
 		double dotProductAB = 0, lASquare = 0, lBSquare = 0;
 		for (int i = 0; i < vectorFile1.length; i++) {
 			dotProductAB += vectorFile1[i] * vectorFile2[i];
@@ -247,7 +251,7 @@ public class MinHash {
 		int indexI=getIndexOfDoc(fileName);
 		
 		
-		int[] vectorFileI = arrBinaryMatrix[indexI];
+		int[] vectorFileI = getVectorFromVocabAndFile(setVocabularies,tableWordForFile.get(fileName));//arrBinaryMatrix[indexI];
 //		for(int i=0;i<setVocabularies.size();i++){
 //			vectorFileI[i]=arrBinaryMatrix[i][indexI];
 //		}
