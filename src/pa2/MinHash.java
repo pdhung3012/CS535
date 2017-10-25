@@ -85,6 +85,7 @@ public class MinHash {
 			int[] vectorFileI = getVectorFromVocabAndFile(setVocabularies,
 					lstWordFileI);
 			BitSet bi=new BitSet(setVocabularies.size());
+			//System.out.println(vectorFileI.length+" length");
 			for(int k=0;k<vectorFileI.length;k++){
 				if(vectorFileI[k]==1){
 					bi.set(k, true);
@@ -214,7 +215,7 @@ public class MinHash {
 			ArrayList<String> lstFile) {
 		int[] arrResult = null;
 		arrResult = new int[setVocab.size()];
-		HashSet<String> setWordInFile = new HashSet<String>();
+		//HashSet<String> setWordInFile = new HashSet<String>();
 		for (int i = 0; i < lstFile.size(); i++) {
 			String item=lstFile.get(i);
 			Integer index=tableVocabIndex.get(item);
@@ -242,14 +243,15 @@ public class MinHash {
 	}
 	
 	 private int[] bits2Ints(BitSet bs) {
-		    int[] temp = new int[bs.size() / 32];
+		    int[] arrResult=new int[setVocabularies.size()];
+		 	for(int i=0;i<arrResult.length;i++){
+		 		arrResult[i]=0;
+		 		if(bs.get(i)){
+		 			arrResult[i]=1;
+		 		}
+		 	}
 
-		    for (int i = 0; i < temp.length; i++)
-		      for (int j = 0; j < 32; j++)
-		        if (bs.get(i * 32 + j))
-		          temp[i] |= 1 << j;
-
-		    return temp;
+		    return arrResult;
 		  }
 
 	public double extractJaccard(String file1, String file2) {
@@ -297,6 +299,7 @@ public class MinHash {
 		
 		
 		int[] vectorFileI = bits2Ints(tableWordForFile.get(fileName));//arrBinaryMatrix[indexI];
+		//System.out.println(vectorFileI.length+" aaa");
 //		for(int i=0;i<setVocabularies.size();i++){
 //			vectorFileI[i]=arrBinaryMatrix[i][indexI];
 //		}

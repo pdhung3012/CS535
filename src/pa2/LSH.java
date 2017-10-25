@@ -47,9 +47,9 @@ public class LSH {
 		int T=3*docName.length();
 		int c=T;
 		int r=minHashMatrix.length/bands;
-		ArrayList<Hashtable<Integer,ArrayList<String>>> lstHashT=new ArrayList<Hashtable<Integer,ArrayList<String>>>();
+		ArrayList<Hashtable<String,ArrayList<String>>> lstHashT=new ArrayList<Hashtable<String,ArrayList<String>>>();
 		for(int i=0;i<bands;i++){
-			Hashtable<Integer,ArrayList<String>> hti=new Hashtable<Integer, ArrayList<String>>();
+			Hashtable<String,ArrayList<String>> hti=new Hashtable<String, ArrayList<String>>();
 			lstHashT.add(hti);
 		}
 		int indexDoc=0;
@@ -62,13 +62,14 @@ public class LSH {
 					mhil[indexMHIL]=minHashMatrix[j][indexDoc];
 				}
 				int hashValue=computeHash(mhil, T);
-				Hashtable<Integer,ArrayList<String>> hti=lstHashT.get(i);
-				ArrayList<String> lstIndex=hti.get(new Integer(hashValue));
+				Hashtable<String,ArrayList<String>> hti=lstHashT.get(i);
+				ArrayList<String> lstIndex=hti.get(String.valueOf(hashValue));
 				if(lstIndex==null){
 					lstIndex=new ArrayList<String>();
-					hti.put(hashValue, lstIndex);
+					hti.put(String.valueOf(hashValue), lstIndex);
 				}
-				lstIndex.add(docNames[indexDoc]);				
+				lstIndex.add(docNames[indexDoc]);	
+				//
 			}
 		}
 		
@@ -82,12 +83,17 @@ public class LSH {
 			for(int j=i*r;j<(i+1)*r;j++){
 				int indexMHIL=(j%r);
 				mhil[indexMHIL]=minHashMatrix[j][indexDoc];
+				//System.out.println("aa "+mhil[indexMHIL]);
 			}
 			int hashValue=computeHash(mhil, T);
-			Hashtable<Integer,ArrayList<String>> hti=lstHashT.get(i);
+			//System.out.println("Hash value "+hashValue);
+			Hashtable<String,ArrayList<String>> hti=lstHashT.get(i);
+			//System.out.println("size band "+i+": "+hti.size()+" "+hashValue+", table: "+hti.toString());
+			String strHashValue=String.valueOf(hashValue);
 			
-			if(hti.contains(hashValue)){
-				setResult.addAll(hti.get(hashValue));
+			if(hti.containsKey(strHashValue)){
+				//System.out.println("run here");
+				setResult.addAll(hti.get(String.valueOf(hashValue)));
 			}
 		}
 		for(String strItem:setResult){
@@ -100,7 +106,7 @@ public class LSH {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String folderPath = "data" + File.separator
-				+ "pa2" + File.separator + "F17PA2" + File.separator;
+				+ "pa2" + File.separator + "F17PA2_2" + File.separator;
 		String fpResultDup="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"nearDuplicateResults.txt";
 		int numPermutations=800;
