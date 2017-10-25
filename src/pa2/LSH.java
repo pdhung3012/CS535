@@ -107,7 +107,7 @@ public class LSH {
 		double simThreshold=0.5;
 		int numberBands=20;
 		MinHash mh=new MinHash(folderPath,numPermutations);
-		int[][] minHashMatrix=mh.minHashMatrix();
+		int[][] minHashMatrix=mh.getArrHashSig();
 		String[] arrDocs=mh.getAllDocs();
 		LSH lsh=new LSH(minHashMatrix,arrDocs,numberBands);
 		ArrayList<String> lstLSH=new ArrayList<String>();
