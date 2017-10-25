@@ -48,9 +48,9 @@ public class MinHash {
 		setVocabularies=new HashSet<String>();
 		
 		for (int i = 0; i < arrFiles.length; i++) {
-			int index=getIndexOfDoc(arrFiles[i].getName());
-			allDocs[index] = arrFiles[i].getName();
-			ArrayList<String> lstWords=removeAllStopWords(folder+allDocs[index]);
+			//int index=getIndexOfDoc(arrFiles[i].getName());
+			allDocs[i] = arrFiles[i].getName();
+			ArrayList<String> lstWords=removeAllStopWords(folder+allDocs[i]);
 			for (String strItem : lstWords) {
 				setVocabularies.add(strItem);
 			}
@@ -71,14 +71,14 @@ public class MinHash {
 			//System.out.println("end doc "+i);
 		}
 		System.out.println("end doc ");
-		arrHashSig=new int[allDocs.length][numPermutations];
+		arrHashSig=new int[numPermutations][allDocs.length];
 		for (int i = 0; i < allDocs.length; i++) {
 			
 			int[] arrResult=minHashSig(allDocs[i]);
-			arrHashSig[i]=arrResult;
-//			for(int j=0;j<arrResult.length;j++){
-//				arrHashSig[j][i]=arrResult[j];
-//			}
+			//arrHashSig[i]=arrResult;
+			for(int j=0;j<arrResult.length;j++){
+				arrHashSig[j][i]=arrResult[j];
+			}
 			//System.out.println("end hash doc "+i);
 		
 		}
@@ -139,13 +139,13 @@ public class MinHash {
 
 	private int getIndexOfDoc(String fileName){
 		int result=-1;
-		result=Integer.parseInt(fileName.replaceAll(".txt","").replaceAll("space-",""));
-//		for(int i=0;i<allDocs.length;i++){
-//			if(fileName.equals(allDocs[i])){
-//				result=i;
-//				break;
-//			}
-//		}
+		//result=Integer.parseInt(fileName.replaceAll(".txt","").replaceAll("space-",""));
+		for(int i=0;i<allDocs.length;i++){
+			if(fileName.equals(allDocs[i])){
+				result=i;
+				break;
+			}
+		}
 		return result;
 	}
 	
@@ -168,17 +168,17 @@ public class MinHash {
 		return lstWords;
 	}
 
-	private HashSet<String> getVocabulary(ArrayList<String> lstFile1,
-			ArrayList<String> lstFile2) {
-		HashSet<String> setResult = new HashSet<String>();
-		for (String strItem : lstFile1) {
-			setResult.add(strItem);
-		}
-		for (String strItem : lstFile2) {
-			setResult.add(strItem);
-		}
-		return setResult;
-	}
+//	private HashSet<String> getVocabulary(ArrayList<String> lstFile1,
+//			ArrayList<String> lstFile2) {
+//		HashSet<String> setResult = new HashSet<String>();
+//		for (String strItem : lstFile1) {
+//			setResult.add(strItem);
+//		}
+//		for (String strItem : lstFile2) {
+//			setResult.add(strItem);
+//		}
+//		return setResult;
+//	}
 
 	private int[] getVectorFromVocabAndFile(HashSet<String> setVocab,
 			ArrayList<String> lstFile) {
@@ -272,12 +272,12 @@ public class MinHash {
 		double result = 0;		
 		int index1=getIndexOfDoc(file1);
 		int index2=getIndexOfDoc(file2);
-		int[] mh1 =arrHashSig[index1];
-		int[] mh2 = arrHashSig[index2];
+		int[] mh1 =new int[numPermutations];
+		int[] mh2 =new int[numPermutations];
 		
 		for(int i=0;i<mh1.length;i++){
-//			mh1[i]=arrHashSig[i][index1];
-//			mh2[i]=arrHashSig[i][index2];
+			mh1[i]=arrHashSig[i][index1];
+			mh2[i]=arrHashSig[i][index2];
 			if(mh1[i]==mh2[i]){
 				result++;
 			}
