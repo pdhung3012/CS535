@@ -5,15 +5,28 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 
+import util.FileIO;
+
 public class LSH {
 
 	private int[][] minHashMatrix;
 	private String[] docNames;
 	private int bands;
+	private MinHash mHash;
+	
+
 	public LSH(int[][] minHashMatrix, String[] docNames, int bands){
 		this.minHashMatrix=minHashMatrix;
 		this.docNames=docNames;
 		this.bands=bands;		
+	}
+	
+	public MinHash getmHash() {
+		return mHash;
+	}
+
+	public void setmHash(MinHash mHash) {
+		this.mHash = mHash;
 	}
 	
 	public ArrayList<String> nearDuplicatesOf(String docName){
@@ -100,13 +113,36 @@ public class LSH {
 			lstResult.add(strItem);
 		}
 		
-		return lstResult;
+		ArrayList<String> lstSim=new ArrayList<String>();
+		ArrayList<Double> lstExactJac=new ArrayList<Double>();
+		//filter the array
+		for(int i=0;i<lstResult.size();i++){
+			if(lstResult.get(i).equals(docName)){
+				continue;
+			}
+			double exactJaccard=getmHash().extractJaccard(docName, lstResult.get(i));
+			if(exactJaccard>=simThreshold){
+				//find position for sim
+				int indexJ=0;
+				for(int j=0;j<lstExactJac.size();j++){
+					if(lstExactJac.get(j)>exactJaccard){
+						indexJ=j;
+						continue;
+					}
+				}
+				lstExactJac.add(indexJ, exactJaccard);
+				lstSim.add(indexJ,lstResult.get(i));
+				
+			}
+		}
+		
+		return lstSim;
 	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String folderPath = "data" + File.separator
-				+ "pa2" + File.separator + "F17PA2_2" + File.separator;
+				+ "pa2" + File.separator + "F17PA2" + File.separator;
 		String fpResultDup="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"nearDuplicateResults.txt";
 		int numPermutations=800;
@@ -117,9 +153,23 @@ public class LSH {
 		String[] arrDocs=mh.getAllDocs();
 		LSH lsh=new LSH(minHashMatrix,arrDocs,numberBands);
 		ArrayList<String> lstLSH=new ArrayList<String>();
-		lstLSH=lsh.nearDuplciateDetector(folderPath, numPermutations, simThreshold,"baseball0.txt");
-		System.out.println("Dup of baseball0.txt: "+lstLSH.toString());
+		lsh.setmHash(mh);
+		String strTestName="baseball0.txt";
+		lstLSH=lsh.nearDuplciateDetector(folderPath, numPermutations, simThreshold,strTestName);
+		StringBuilder sbResult=new StringBuilder();
+		sbResult.append("Result for "+strTestName+"\n");
+		for(int i=0;i<lstLSH.size();i++){
+			double exactJaccard=mh.extractJaccard(strTestName, lstLSH.get(i));
+			sbResult.append("\t"+lstLSH.get(i)+"\t"+exactJaccard+"\n");			
+		}
+		String strResult=sbResult.toString();
+		FileIO.writeStringToFile(strResult, fpResultDup);
+		System.out.println(strResult);
+		//System.out.println("Dup of baseball0.txt: "+lstLSH.toString());
 		//mha.accuracy(folderPath, numPermutations, errorParam);
+		//Dup of baseball0.txt: [hockey789.txt.copy6, space-337.txt.copy4, hockey789.txt.copy3,
+		
+
 	}
 
 }

@@ -105,12 +105,14 @@ public class MinHash {
 		arrHashSig=new int[numPermutations][allDocs.length];
 		for (int i = 0; i < allDocs.length; i++) {
 			
-			int[] arrResult=minHashSig(allDocs[i]);
+			//int[] arrResult=minHashSig(allDocs[i]);
+			int[] arrResult=new int[numPermutations];
 			//arrHashSig[i]=arrResult;
 			for(int j=0;j<arrResult.length;j++){
-				arrHashSig[j][i]=arrResult[j];
+				//arrHashSig[j][i]=arrResult[j];
+				arrHashSig[j][i]=0;
 			}
-			//System.out.println("end hash doc "+i);
+			System.out.println("end hash doc "+i);
 		
 		}
 		System.out.println("end hash doc ");
@@ -295,7 +297,7 @@ public class MinHash {
 
 	public int[] minHashSig(String fileName) {
 		//ArrayList<String> lstWordFile1 = removeAllStopWords(folder + fileName);		
-		int indexI=getIndexOfDoc(fileName);
+		//int indexI=getIndexOfDoc(fileName);
 		
 		
 		int[] vectorFileI = bits2Ints(tableWordForFile.get(fileName));//arrBinaryMatrix[indexI];
