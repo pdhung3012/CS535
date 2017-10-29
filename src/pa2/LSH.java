@@ -13,7 +13,10 @@ public class LSH {
 	private String[] docNames;
 	private int bands;
 	private MinHash mHash;
-	
+	private int numberNeedCompare;
+	private int numberSSimilarity;
+	private int r,indexDoc,c,T;
+	ArrayList<Hashtable<String,ArrayList<String>>> lstHashT;
 
 	public LSH(int[][] minHashMatrix, String[] docNames, int bands){
 		this.minHashMatrix=minHashMatrix;
@@ -21,6 +24,32 @@ public class LSH {
 		this.bands=bands;		
 	}
 	
+	
+	
+	public int getNumberNeedCompare() {
+		return numberNeedCompare;
+	}
+
+
+
+	public void setNumberNeedCompare(int numberNeedCompare) {
+		this.numberNeedCompare = numberNeedCompare;
+	}
+
+
+
+	public int getNumberSSimilarity() {
+		return numberSSimilarity;
+	}
+
+
+
+	public void setNumberSSimilarity(int numberSSimilarity) {
+		this.numberSSimilarity = numberSSimilarity;
+	}
+
+
+
 	public MinHash getmHash() {
 		return mHash;
 	}
@@ -30,8 +59,30 @@ public class LSH {
 	}
 	
 	public ArrayList<String> nearDuplicatesOf(String docName){
-		ArrayList<String> lst=new ArrayList<String>();
-		return lst;
+		ArrayList<String> lstResult=new ArrayList<String>();
+		HashSet<String> setResult=new HashSet<String>();
+		for(int i=0;i<bands;i++){
+			int[] mhil=new int[r];
+			for(int j=i*r;j<(i+1)*r;j++){
+				int indexMHIL=(j%r);
+				mhil[indexMHIL]=minHashMatrix[j][indexDoc];
+				//System.out.println("aa "+mhil[indexMHIL]);
+			}
+			int hashValue=computeHash(mhil, T);
+			//System.out.println("Hash value "+hashValue);
+			Hashtable<String,ArrayList<String>> hti=lstHashT.get(i);
+			//System.out.println("size band "+i+": "+hti.size()+" "+hashValue+", table: "+hti.toString());
+			String strHashValue=String.valueOf(hashValue);
+			
+			if(hti.containsKey(strHashValue)){
+				//System.out.println("run here");
+				setResult.addAll(hti.get(String.valueOf(hashValue)));
+			}
+		}
+		for(String strItem:setResult){
+			lstResult.add(strItem);
+		}
+		return lstResult;
 	}
 	
 	private int getIndexOfDoc(String fileName){
@@ -57,10 +108,10 @@ public class LSH {
 	
 	public ArrayList<String> nearDuplciateDetector(String folder,int numPermutations,double simThreshold,String docName){
 		ArrayList<String> lstResult=new ArrayList<String>();
-		int T=3*docName.length();
-		int c=T;
-		int r=minHashMatrix.length/bands;
-		ArrayList<Hashtable<String,ArrayList<String>>> lstHashT=new ArrayList<Hashtable<String,ArrayList<String>>>();
+		T=3*docName.length();
+		c=T;
+		r=minHashMatrix.length/bands;
+		lstHashT=new ArrayList<Hashtable<String,ArrayList<String>>>();
 		for(int i=0;i<bands;i++){
 			Hashtable<String,ArrayList<String>> hti=new Hashtable<String, ArrayList<String>>();
 			lstHashT.add(hti);
@@ -90,32 +141,13 @@ public class LSH {
 		indexDoc=getIndexOfDoc(docName);
 		System.out.println(docName+"\t"+docNames.length);
 		//int countBBucket=0;
-		HashSet<String> setResult=new HashSet<String>();
-		for(int i=0;i<bands;i++){
-			int[] mhil=new int[r];
-			for(int j=i*r;j<(i+1)*r;j++){
-				int indexMHIL=(j%r);
-				mhil[indexMHIL]=minHashMatrix[j][indexDoc];
-				//System.out.println("aa "+mhil[indexMHIL]);
-			}
-			int hashValue=computeHash(mhil, T);
-			//System.out.println("Hash value "+hashValue);
-			Hashtable<String,ArrayList<String>> hti=lstHashT.get(i);
-			//System.out.println("size band "+i+": "+hti.size()+" "+hashValue+", table: "+hti.toString());
-			String strHashValue=String.valueOf(hashValue);
-			
-			if(hti.containsKey(strHashValue)){
-				//System.out.println("run here");
-				setResult.addAll(hti.get(String.valueOf(hashValue)));
-			}
-		}
-		for(String strItem:setResult){
-			lstResult.add(strItem);
-		}
+		lstResult=nearDuplicatesOf(docName);
 		
 		ArrayList<String> lstSim=new ArrayList<String>();
 		ArrayList<Double> lstExactJac=new ArrayList<Double>();
 		//filter the array
+		numberNeedCompare=lstResult.size()-1;
+		
 		for(int i=0;i<lstResult.size();i++){
 			if(lstResult.get(i).equals(docName)){
 				continue;
@@ -135,6 +167,7 @@ public class LSH {
 				
 			}
 		}
+		numberSSimilarity=lstSim.size();
 		
 		return lstSim;
 	}
@@ -157,7 +190,7 @@ public class LSH {
 		String strTestName="baseball0.txt";
 		lstLSH=lsh.nearDuplciateDetector(folderPath, numPermutations, simThreshold,strTestName);
 		StringBuilder sbResult=new StringBuilder();
-		sbResult.append("Result for "+strTestName+"\n");
+		sbResult.append("Result for "+strTestName+" ("+lsh.getNumberSSimilarity()+"/"+lsh.getNumberNeedCompare()+"="+(lsh.getNumberSSimilarity()*1.0/lsh.getNumberNeedCompare())+")\n");
 		for(int i=0;i<lstLSH.size();i++){
 			double exactJaccard=mh.extractJaccard(strTestName, lstLSH.get(i));
 			sbResult.append("\t"+lstLSH.get(i)+"\t"+exactJaccard+"\n");			
