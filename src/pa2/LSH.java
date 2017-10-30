@@ -16,7 +16,7 @@ public class LSH {
 	private int numberNeedCompare;
 	private int numberSSimilarity;
 	private int r,indexDoc,c,T;
-	ArrayList<Hashtable<String,ArrayList<String>>> lstHashT;
+	ArrayList<Hashtable<Integer,ArrayList<String>>> lstHashT;
 
 	public LSH(int[][] minHashMatrix, String[] docNames, int bands){
 		this.minHashMatrix=minHashMatrix;
@@ -61,6 +61,7 @@ public class LSH {
 	public ArrayList<String> nearDuplicatesOf(String docName){
 		ArrayList<String> lstResult=new ArrayList<String>();
 		HashSet<String> setResult=new HashSet<String>();
+		indexDoc=getIndexOfDoc(docName);
 		for(int i=0;i<bands;i++){
 			int[] mhil=new int[r];
 			for(int j=i*r;j<(i+1)*r;j++){
@@ -70,13 +71,13 @@ public class LSH {
 			}
 			int hashValue=computeHash(mhil, T);
 			//System.out.println("Hash value "+hashValue);
-			Hashtable<String,ArrayList<String>> hti=lstHashT.get(i);
+			Hashtable<Integer,ArrayList<String>> hti=lstHashT.get(i);
 			//System.out.println("size band "+i+": "+hti.size()+" "+hashValue+", table: "+hti.toString());
-			String strHashValue=String.valueOf(hashValue);
+			//String strHashValue=String.valueOf(hashValue);
 			
-			if(hti.containsKey(strHashValue)){
+			if(hti.containsKey(hashValue)){
 				//System.out.println("run here");
-				setResult.addAll(hti.get(String.valueOf(hashValue)));
+				setResult.addAll(hti.get(hashValue));
 			}
 		}
 		for(String strItem:setResult){
@@ -100,20 +101,37 @@ public class LSH {
 	private int computeHash(int[] mhil,int T){
 		int result=0;
 		for(int i=0;i<mhil.length;i++){
-			result+=mhil[i]*i;
+			result+=mhil[i];
 		}
-		result=result%T;
+		result=result%T+1;
 		return result;
+	}
+	
+	boolean isPrime(int n) {
+		// check if n is a multiple of 2
+		if (n % 2 == 0)
+			return false;
+		// if not, then just check the odds
+		for (int i = 3; i * i <= n; i += 2) {
+			if (n % i == 0)
+				return false;
+		}
+		return true;
 	}
 	
 	public ArrayList<String> nearDuplciateDetector(String folder,int numPermutations,double simThreshold,String docName){
 		ArrayList<String> lstResult=new ArrayList<String>();
-		T=3*docName.length();
+		int N=docNames.length;
+		T=N+1;
+		while(!isPrime(T)){
+			T++;
+		}
+		//T=3*docNames.length;
 		c=T;
-		r=minHashMatrix.length/bands;
-		lstHashT=new ArrayList<Hashtable<String,ArrayList<String>>>();
+		r=numPermutations/bands;
+		lstHashT=new ArrayList<Hashtable<Integer,ArrayList<String>>>();
 		for(int i=0;i<bands;i++){
-			Hashtable<String,ArrayList<String>> hti=new Hashtable<String, ArrayList<String>>();
+			Hashtable<Integer,ArrayList<String>> hti=new Hashtable<Integer, ArrayList<String>>();
 			lstHashT.add(hti);
 		}
 		int indexDoc=0;
@@ -126,11 +144,11 @@ public class LSH {
 					mhil[indexMHIL]=minHashMatrix[j][indexDoc];
 				}
 				int hashValue=computeHash(mhil, T);
-				Hashtable<String,ArrayList<String>> hti=lstHashT.get(i);
-				ArrayList<String> lstIndex=hti.get(String.valueOf(hashValue));
+				Hashtable<Integer,ArrayList<String>> hti=lstHashT.get(i);
+				ArrayList<String> lstIndex=hti.get(hashValue);
 				if(lstIndex==null){
 					lstIndex=new ArrayList<String>();
-					hti.put(String.valueOf(hashValue), lstIndex);
+					hti.put(hashValue, lstIndex);
 				}
 				lstIndex.add(docNames[indexDoc]);	
 				//
@@ -153,7 +171,7 @@ public class LSH {
 				continue;
 			}
 			double approximateJaccard=getmHash().approximateJaccard(docName, lstResult.get(i));
-			//double exactJaccard=getmHash().extractJaccard(docName, lstResult.get(i));
+			double exactJaccard=getmHash().extractJaccard(docName, lstResult.get(i));
 			if(approximateJaccard>=simThreshold){
 				//find position for sim
 				int indexJ=0;
@@ -170,7 +188,7 @@ public class LSH {
 			}
 		}
 		numberSSimilarity=lstSim.size();
-		
+		System.out.println("T: "+T);
 		return lstSim;
 	}
 	

@@ -496,6 +496,7 @@ public class MinHash {
 		// }
 		FileIO.writeStringToFile(strResultExact, fpResultExactJaccard);
 		FileIO.writeStringToFile(strResultApprox, fpResultApproxsJaccard);
+		
 
 	}
 
