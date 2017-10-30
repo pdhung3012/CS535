@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import util.FileIO;
 
@@ -33,17 +35,20 @@ public class MinHash {
 		this.arrHashSig = arrHashSig;
 	}
 	
+	public String printHashPermutation(){
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<numPermutations;i++){
+			System.out.println("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]);
+			sb.append("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]);
+		}
+		return sb.toString();
+	}
+	
 	public MinHash(String folder, int numPermutations) {
 		this.folder = folder;
 		this.numPermutations = numPermutations;
 		
-		a=new int[numPermutations];
-		b=new int[numPermutations];
-		for(int i=1;i<=numPermutations;i++){
-			a[i-1]=i;
-			b[i-1]=i+1;
-		}
-		c=getListFirstPrime();
+		
 		
 		
 		File fileFolderArticle = new File(folder);
@@ -78,6 +83,16 @@ public class MinHash {
 		}
 		
 		System.out.println("vocab of "+allDocs.length+" doc is "+setVocabularies.size());
+		
+		a=new int[numPermutations];
+		b=new int[numPermutations];
+		for(int i=1;i<=numPermutations;i++){
+			a[i-1]=ThreadLocalRandom.current().nextInt(1, setVocabularies.size() + 1);
+			b[i-1]=ThreadLocalRandom.current().nextInt(1, setVocabularies.size() + 1);
+		}
+		c=getListFirstPrime();
+		
+		System.out.println("End generate "+numPermutations+" hash function");
 		
 		tableWordForFile=new Hashtable<String, BitSet>();
 		tableIndexForFile=new Hashtable<String, HashSet<Integer>>();
@@ -144,12 +159,12 @@ public class MinHash {
 	
 	private int[] getListFirstPrime(){
 		int[] arrResult=new int[numPermutations];
-		int indexCountPrime=1;
-		int nextCandidate=1;
+		int indexCountPrime=0;
+		int nextCandidate=setVocabularies.size()+1;
 		arrResult[0]=1;
 		while(indexCountPrime<numPermutations ){
 			int countMod=0;
-			nextCandidate++;
+			nextCandidate--;
 			for(int i=1;i<=nextCandidate;i++){
 				if(nextCandidate%i==0){
 					countMod++;
@@ -396,6 +411,8 @@ public class MinHash {
 				+ "pa2" + File.separator + "results" + File.separator+"testExactJaccard.txt";
 		String fpResultApproxsJaccard="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"testApproxJaccard.txt";
+		String fpHashPermutation="data" + File.separator
+				+ "pa2" + File.separator + "results" + File.separator+"hashPermutation.txt";
 		
 		if(args.length>=3){
 			folderPath=args[0];
@@ -418,6 +435,7 @@ public class MinHash {
 		double resultExact = mh.extractJaccard(fileName1, fileName2);
 		double resultApprox = mh.approximateJaccard(fileName1, fileName2);
 		System.out.println(fileName1 + "\t" + fileName2 + "\t" + resultApprox+"\t"+resultExact);
+		FileIO.writeStringToFile(mh.printHashPermutation(), fpHashPermutation);
 //		for(int i=0;i<arrFiles.length-1;i++){
 //			String fileName1 = arrFiles[i].getName();
 //			String fileName2 = arrFiles[i+1].getName();
