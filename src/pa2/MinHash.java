@@ -331,7 +331,7 @@ public class MinHash {
 		}
 
 		result = dotProductAB / (lASquare+lBSquare-dotProductAB);
-
+//
 		return result;
 	}
 
