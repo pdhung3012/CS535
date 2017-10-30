@@ -39,7 +39,7 @@ public class MinHash {
 		StringBuilder sb=new StringBuilder();
 		for(int i=0;i<numPermutations;i++){
 			//System.out.println("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]);
-			sb.append("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]);
+			sb.append("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]+"\n");
 		}
 		return sb.toString();
 	}
@@ -87,9 +87,11 @@ public class MinHash {
 		a=new int[numPermutations];
 		b=new int[numPermutations];
 		for(int i=1;i<=numPermutations;i++){
-			a[i-1]=ThreadLocalRandom.current().nextInt(1, 1000);
-			b[i-1]=ThreadLocalRandom.current().nextInt(1, 10000);
+			a[i-1]=ThreadLocalRandom.current().nextInt(1, 100);
+			b[i-1]=ThreadLocalRandom.current().nextInt(1, 100000);
 		}
+//		a=getListFirstPrime();
+//		b=getListFirstPrime();
 		c=getListFirstPrime();
 		
 		System.out.println("End generate "+numPermutations+" hash function");
@@ -131,6 +133,7 @@ public class MinHash {
 			//arrHashSig[i]=arrResult;
 			for(int j=0;j<arrResult.length;j++){
 				arrHashSig[j][i]=arrResult[j];
+			//	System.out.println(arrHashSig[j][i]+" bit");
 				//arrHashSig[j][i]=0;
 			}
 			System.out.println("end hash doc "+i);
@@ -187,7 +190,7 @@ public class MinHash {
 //				indexCountPrime++;
 //			}			
 //		}
-		for(int i=2;i<setVocabularies.size();i++){
+		for(int i=2;i<setVocabularies.size()/10;i++){
 			if(isPrime(i)){
 				lstPrimes.add(i);
 			}
@@ -344,46 +347,85 @@ public class MinHash {
 	
 	}
 
+	private int[] getRandomPermutation(ArrayList<Integer> lstInput){
+		
+		
+		java.util.Collections.shuffle(lstInput);
+		int[] arrPermutation=new int[lstInput.size()];
+		for(int i=0;i<lstInput.size();i++){
+			//int index= ThreadLocalRandom.current().nextInt(0, lstInput.size());
+			arrPermutation[i]=lstInput.get(i);
+			//lstInput.remove(index);
+		}
+		return arrPermutation;
+	}
 	
 	
 	public int[] minHashSig(String fileName) {
-		//ArrayList<String> lstWordFile1 = removeAllStopWords(folder + fileName);		
-		//int indexI=getIndexOfDoc(fileName);
-		
-		
-		//BitSet bitVectorFileI = tableWordForFile.get(fileName);//arrBinaryMatrix[indexI];
-		//System.out.println(vectorFileI.length+" aaa");
-//		for(int i=0;i<setVocabularies.size();i++){
-//			vectorFileI[i]=arrBinaryMatrix[i][indexI];
-//		}
-		//System.out.println("length vector"+vectorFileI.length);
 		int[] arrResult=new int[numPermutations];
 		int minValue=10000000;	
 		HashSet<Integer> setIndex=tableIndexForFile.get(fileName);
+		//HashSet<Integer> setInput=new HashSet<Integer>();
+		
+		ArrayList<Integer> lstIndex=new ArrayList<Integer>();
+		for(Integer i:setIndex){
+			lstIndex.add(i);
+		}
+		
 		for(int indexHash=1;indexHash<=numPermutations;indexHash++){
-			minValue=10000000;
-//			bitVectorFileI.
-//			for(int i=0;i<vectorFileI.length;i++){
-//				if(vectorFileI[i]==1){
-//					int value=0;
-//					value=getHash(i+1, indexHash);
-//					if(value<minValue){
-//						minValue=value;
-//					}
-//				}
-//			}
+			minValue=10000000;			
+			//setInput=new HashSet<Integer>();
 			
 			for(Integer i:setIndex){
-				int value=0;
-				value=getHash(i+1, indexHash);
+			int value=0;
+			value=getHash(i+1, indexHash);
+			
+			
+			
+		//	System.out.println(value+" hash");
+			if(value<minValue){
+				minValue=value;
+			}
+			
+		}
+			
+//			for(Integer i:setIndex){
+//				int value=0;
+//				//value=getHash(i+1, indexHash);
+//				boolean isFindPermu=false;
+//				while(!isFindPermu){
+//					int candidate=ThreadLocalRandom.current().nextInt(1, setVocabularies.size()+1);
+//					if(!setInput.contains(candidate)){
+//						value=candidate;
+//						setInput.add(candidate);
+//						isFindPermu=true;
+//					//	System.out.println(value+" hash");
+//					}
+//				}
+//				
+//				
+//			//	System.out.println(value+" hash");
+//				if(value<minValue){
+//					minValue=value;
+//				}
+//				
+//			}
+			
+			for(Integer i:lstIndex){
+				int value=i;
+				//value=getHash(i+1, indexHash);
+				
+			//	System.out.println(value+" hash");
 				if(value<minValue){
 					minValue=value;
 				}
 				
 			}
 			arrResult[indexHash-1]=minValue;
+//			System.out.println(fileName+"\t"+lstIndex.size()+"\n"+lstIndex.toString());
 		}
 		
+		//System.out.println(fileName+"\t"+setIndex.size()+"\n"+setInput.size());
 		return arrResult;
 	}
 
