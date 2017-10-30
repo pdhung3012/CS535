@@ -1,0 +1,117 @@
+1) Result for baseball0.txt (7/9656=7.249378624689313E-4)
+	FileName	approxJaccard	exactJaccard
+	baseball0.txt.copy7	0.96375	0.9777396600155359
+	baseball0.txt.copy2	0.94625	0.9777396600155359
+	baseball0.txt.copy3	0.955	0.9777396600155359
+	baseball0.txt.copy4	0.95625	0.9777396600155359
+	baseball0.txt.copy5	0.955	0.9777396600155359
+	baseball0.txt.copy6	0.95375	0.9777396600155359
+	baseball0.txt.copy1	0.9575	0.9777396600155359
+2) Result for baseball10.txt (0/9323=0.0)
+	FileName	approxJaccard	exactJaccard
+3) Result for baseball20.txt (7/9323=7.508312774857878E-4)
+	FileName	approxJaccard	exactJaccard
+	baseball20.txt.copy3	0.9775	0.9870962335856491
+	baseball20.txt.copy2	0.98125	0.9870962335856491
+	baseball44.txt.copy7	0.335	0.5005556586267373
+	baseball44.txt.copy6	0.33375	0.5005556586267373
+	baseball44.txt.copy4	0.335	0.5005556586267373
+	baseball44.txt.copy1	0.3325	0.5005556586267373
+	baseball20.txt.copy1	0.9775	0.9870962335856491
+4) Result for baseball100.txt (7/8704=8.042279411764705E-4)
+	FileName	approxJaccard	exactJaccard
+	baseball100.txt.copy2	0.9725	0.982607368881035
+	baseball93.txt	0.62875	0.7715167498104596
+	baseball93.txt.copy2	0.61	0.7559289460184545
+	baseball93.txt.copy5	0.61125	0.7559289460184545
+	baseball93.txt.copy3	0.61	0.7559289460184545
+	baseball93.txt.copy4	0.605	0.7559289460184545
+	baseball100.txt.copy7	0.97	0.982607368881035
+5) Result for baseball200.txt (4/8704=4.5955882352941176E-4)
+	FileName	approxJaccard	exactJaccard
+	baseball200.txt.copy4	0.94375	0.9724084693648638
+	baseball200.txt.copy2	0.9475	0.9724084693648638
+	baseball183.txt.copy7	0.435	0.5973746726579542
+	baseball183.txt.copy2	0.43125	0.5973746726579542
+6) Result for baseball300.txt (0/8704=0.0)
+	FileName	approxJaccard	exactJaccard
+7) Result for space-0.txt (6/11060=5.4249547920434E-4)
+	FileName	approxJaccard	exactJaccard
+	space-0.txt.copy4	0.96625	0.9756654533819864
+	space-0.txt.copy5	0.95625	0.9756654533819864
+	space-531.txt.copy2	0.735	0.8233056133593915
+	space-531.txt.copy6	0.74375	0.8233056133593915
+	space-531.txt.copy7	0.7325	0.8233056133593915
+	space-0.txt.copy7	0.95875	0.9756654533819864
+8) Result for space-10.txt (3/10183=2.946086614946479E-4)
+	FileName	approxJaccard	exactJaccard
+	space-10.txt.copy1	0.94875	0.9686084075574665
+	space-10.txt.copy5	0.95375	0.9686084075574665
+	space-10.txt.copy7	0.9475	0.9686084075574665
+9) Result for space-20.txt (4/10183=3.928115486595306E-4)
+	FileName	approxJaccard	exactJaccard
+	space-20.txt.copy2	0.95125	0.9766049484994053
+	space-20.txt.copy4	0.9625	0.9766049484994053
+	space-20.txt.copy6	0.95125	0.9766049484994053
+	space-20.txt.copy1	0.96625	0.9766049484994053
+10) Result for space-100.txt (3/9656=3.106876553438277E-4)
+	FileName	approxJaccard	exactJaccard
+	space-100.txt.copy3	0.95625	0.97182531580755
+	space-100.txt.copy4	0.9425	0.97182531580755
+	space-100.txt.copy5	0.945	0.97182531580755
+11) Result for space-200.txt (8/9656=8.285004142502071E-4)
+	FileName	approxJaccard	exactJaccard
+	space-200.txt.copy4	0.97	0.9839989676081822
+	space-200.txt.copy1	0.96875	0.9839989676081822
+	space-269.txt.copy7	0.38125	0.5470237405063839
+	space-269.txt.copy4	0.38375	0.5470237405063839
+	space-269.txt.copy1	0.3825	0.5470237405063839
+	space-225.txt.copy2	0.4625	0.6186609312905434
+	space-225.txt.copy7	0.4675	0.6186609312905434
+	space-200.txt.copy6	0.97	0.9839989676081822
+12) Result for space-300.txt (8/9656=8.285004142502071E-4)
+	FileName	approxJaccard	exactJaccard
+	space-300.txt.copy5	0.9475	0.9734465847056577
+	space-300.txt.copy4	0.9475	0.9734465847056577
+	space-246.txt.copy1	0.535	0.6178635297804531
+	space-246.txt.copy4	0.525	0.6178635297804531
+	space-246.txt.copy7	0.525	0.6178635297804531
+	space-221.txt	0.41625	0.5059806172657636
+	space-246.txt	0.5425	0.6339146060976658
+	space-300.txt.copy6	0.95	0.9734465847056577
+13) Result for hockey0.txt (3/11060=2.7124773960217E-4)
+	FileName	approxJaccard	exactJaccard
+	hockey0.txt.copy2	0.9475	0.9653072991634227
+	hockey0.txt.copy4	0.91625	0.9653072991634227
+	hockey0.txt.copy3	0.92375	0.9653072991634227
+14) Result for hockey10.txt (2/10183=1.964057743297653E-4)
+	FileName	approxJaccard	exactJaccard
+	hockey10.txt.copy2	0.92125	0.9619120153500137
+	hockey10.txt.copy4	0.9175	0.9619120153500137
+15) Result for hockey20.txt (4/10183=3.928115486595306E-4)
+	FileName	approxJaccard	exactJaccard
+	hockey20.txt.copy4	0.94875	0.9762812094883317
+	hockey20.txt.copy2	0.9575	0.9762812094883317
+	hockey20.txt.copy1	0.95125	0.9762812094883317
+	hockey20.txt.copy6	0.96	0.9762812094883317
+16) Result for hockey100.txt (4/9656=4.1425020712510354E-4)
+	FileName	approxJaccard	exactJaccard
+	hockey100.txt.copy5	0.95875	0.9817613873476319
+	hockey100.txt.copy3	0.96	0.9817613873476319
+	hockey100.txt.copy4	0.95875	0.9817613873476319
+	hockey100.txt.copy2	0.96375	0.9817613873476319
+17) Result for hockey200.txt (0/9656=0.0)
+	FileName	approxJaccard	exactJaccard
+18) Result for hockey300.txt (11/9656=0.0011391880695940347)
+	FileName	approxJaccard	exactJaccard
+	hockey300.txt.copy2	0.96125	0.9801960588196068
+	hockey300.txt.copy4	0.94625	0.9801960588196068
+	hockey300.txt.copy7	0.95625	0.9801960588196068
+	hockey272.txt.copy3	0.42375	0.6479390965872466
+	hockey272.txt.copy1	0.415	0.6479390965872466
+	hockey272.txt.copy7	0.4225	0.6479390965872466
+	hockey272.txt	0.43125	0.659828879073858
+	hockey177.txt.copy2	0.39875	0.6157896069489425
+	hockey177.txt.copy5	0.39375	0.6157896069489425
+	hockey177.txt.copy7	0.39	0.6157896069489425
+	hockey177.txt	0.405	0.6259686371487613

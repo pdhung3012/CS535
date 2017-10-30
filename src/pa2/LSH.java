@@ -144,7 +144,7 @@ public class LSH {
 		lstResult=nearDuplicatesOf(docName);
 		
 		ArrayList<String> lstSim=new ArrayList<String>();
-		ArrayList<Double> lstExactJac=new ArrayList<Double>();
+		ArrayList<Double> lstApproxJac=new ArrayList<Double>();
 		//filter the array
 		numberNeedCompare=lstResult.size()-1;
 		
@@ -152,17 +152,18 @@ public class LSH {
 			if(lstResult.get(i).equals(docName)){
 				continue;
 			}
+			double approximateJaccard=getmHash().approximateJaccard(docName, lstResult.get(i));
 			double exactJaccard=getmHash().extractJaccard(docName, lstResult.get(i));
 			if(exactJaccard>=simThreshold){
 				//find position for sim
 				int indexJ=0;
-				for(int j=0;j<lstExactJac.size();j++){
-					if(lstExactJac.get(j)>exactJaccard){
+				for(int j=0;j<lstApproxJac.size();j++){
+					if(lstApproxJac.get(j)>approximateJaccard){
 						indexJ=j;
 						continue;
 					}
 				}
-				lstExactJac.add(indexJ, exactJaccard);
+				lstApproxJac.add(indexJ, approximateJaccard);
 				lstSim.add(indexJ,lstResult.get(i));
 				
 			}
@@ -178,26 +179,38 @@ public class LSH {
 				+ "pa2" + File.separator + "F17PA2" + File.separator;
 		String fpResultDup="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"nearDuplicateResults.txt";
+		String fpFileQuery="data" + File.separator
+				+ "pa2" + File.separator + "results" + File.separator+"listDocForDuplicateDetector.txt";
+		
 		int numPermutations=800;
 		double simThreshold=0.5;
 		int numberBands=20;
+		String[] arrQueries=FileIO.readStringFromFile(fpFileQuery).trim().split("\n");
+		
 		MinHash mh=new MinHash(folderPath,numPermutations);
 		int[][] minHashMatrix=mh.getArrHashSig();
 		String[] arrDocs=mh.getAllDocs();
 		LSH lsh=new LSH(minHashMatrix,arrDocs,numberBands);
 		ArrayList<String> lstLSH=new ArrayList<String>();
 		lsh.setmHash(mh);
-		String strTestName="baseball0.txt";
-		lstLSH=lsh.nearDuplciateDetector(folderPath, numPermutations, simThreshold,strTestName);
-		StringBuilder sbResult=new StringBuilder();
-		sbResult.append("Result for "+strTestName+" ("+lsh.getNumberSSimilarity()+"/"+lsh.getNumberNeedCompare()+"="+(lsh.getNumberSSimilarity()*1.0/lsh.getNumberNeedCompare())+")\n");
-		for(int i=0;i<lstLSH.size();i++){
-			double exactJaccard=mh.extractJaccard(strTestName, lstLSH.get(i));
-			sbResult.append("\t"+lstLSH.get(i)+"\t"+exactJaccard+"\n");			
+		FileIO.writeStringToFile("", fpResultDup);
+		for(int index=0;index<arrQueries.length;index++){
+			String strTestName=arrQueries[index].trim();
+			lstLSH=lsh.nearDuplciateDetector(folderPath, numPermutations, simThreshold,strTestName);
+			StringBuilder sbResult=new StringBuilder();
+			sbResult.append((index+1)+") Result for "+strTestName+" ("+lsh.getNumberSSimilarity()+"/"+lsh.getNumberNeedCompare()+"="+(lsh.getNumberSSimilarity()*1.0/lsh.getNumberNeedCompare())+")\n");
+			sbResult.append("\tFileName\tapproxJaccard\texactJaccard\n");
+			for(int i=0;i<lstLSH.size();i++){
+				double approxJaccard=mh.approximateJaccard(strTestName, lstLSH.get(i));
+				double exactJaccard=mh.extractJaccard(strTestName, lstLSH.get(i));
+				sbResult.append("\t"+lstLSH.get(i)+"\t"+approxJaccard+"\t"+exactJaccard+"\n");			
+			}
+			String strResult=sbResult.toString();
+			FileIO.appendStringToFile(strResult, fpResultDup);
+			System.out.println(strResult);
 		}
-		String strResult=sbResult.toString();
-		FileIO.writeStringToFile(strResult, fpResultDup);
-		System.out.println(strResult);
+		
+		
 		//System.out.println("Dup of baseball0.txt: "+lstLSH.toString());
 		//mha.accuracy(folderPath, numPermutations, errorParam);
 		//Dup of baseball0.txt: [hockey789.txt.copy6, space-337.txt.copy4, hockey789.txt.copy3,

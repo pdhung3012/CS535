@@ -19,6 +19,7 @@ public class MinHash {
 	
 
 	private Hashtable<String,BitSet> tableWordForFile;
+	private Hashtable<String,HashSet<Integer>> tableIndexForFile;
 	private Hashtable<String,Integer> tableVocabIndex;
 	HashSet<String> setVocabularies;
 	File[] arrFiles;
@@ -79,20 +80,25 @@ public class MinHash {
 		System.out.println("vocab of "+allDocs.length+" doc is "+setVocabularies.size());
 		
 		tableWordForFile=new Hashtable<String, BitSet>();
+		tableIndexForFile=new Hashtable<String, HashSet<Integer>>();
+		
 //		arrBinaryMatrix=new int[allDocs.length][setVocabularies.size()];
 		for (int i = 0; i < allDocs.length; i++) {
 			ArrayList<String> lstWordFileI = removeAllStopWords(folder + allDocs[i]);			
 			int[] vectorFileI = getVectorFromVocabAndFile(setVocabularies,
 					lstWordFileI);
 			BitSet bi=new BitSet(setVocabularies.size());
+			HashSet<Integer> setIndex=new HashSet<Integer>();
 			//System.out.println(vectorFileI.length+" length");
 			for(int k=0;k<vectorFileI.length;k++){
 				if(vectorFileI[k]==1){
 					bi.set(k, true);
+					setIndex.add(k);
 				}
 				
 			}
 			tableWordForFile.put(allDocs[i], bi);
+			tableIndexForFile.put(allDocs[i], setIndex);
 			
 //			int index=getIndexOfDoc(allDocs[i]);
 //			arrBinaryMatrix[index]=vectorFileI;
@@ -105,12 +111,12 @@ public class MinHash {
 		arrHashSig=new int[numPermutations][allDocs.length];
 		for (int i = 0; i < allDocs.length; i++) {
 			
-			//int[] arrResult=minHashSig(allDocs[i]);
-			int[] arrResult=new int[numPermutations];
+			int[] arrResult=minHashSig(allDocs[i]);
+			//int[] arrResult=new int[numPermutations];
 			//arrHashSig[i]=arrResult;
 			for(int j=0;j<arrResult.length;j++){
-				//arrHashSig[j][i]=arrResult[j];
-				arrHashSig[j][i]=0;
+				arrHashSig[j][i]=arrResult[j];
+				//arrHashSig[j][i]=0;
 			}
 			System.out.println("end hash doc "+i);
 		
@@ -300,21 +306,35 @@ public class MinHash {
 		//int indexI=getIndexOfDoc(fileName);
 		
 		
-		int[] vectorFileI = bits2Ints(tableWordForFile.get(fileName));//arrBinaryMatrix[indexI];
+		//BitSet bitVectorFileI = tableWordForFile.get(fileName);//arrBinaryMatrix[indexI];
 		//System.out.println(vectorFileI.length+" aaa");
 //		for(int i=0;i<setVocabularies.size();i++){
 //			vectorFileI[i]=arrBinaryMatrix[i][indexI];
 //		}
+		//System.out.println("length vector"+vectorFileI.length);
 		int[] arrResult=new int[numPermutations];
+		int minValue=10000000;	
+		HashSet<Integer> setIndex=tableIndexForFile.get(fileName);
 		for(int indexHash=1;indexHash<=numPermutations;indexHash++){
-			int minValue=10000000;			
-			for(int i=0;i<vectorFileI.length;i++){
-				if(vectorFileI[i]==1){
-					int value=getHash(i+1, indexHash);
-					if(value<minValue){
-						minValue=value;
-					}
+			minValue=10000000;
+//			bitVectorFileI.
+//			for(int i=0;i<vectorFileI.length;i++){
+//				if(vectorFileI[i]==1){
+//					int value=0;
+//					value=getHash(i+1, indexHash);
+//					if(value<minValue){
+//						minValue=value;
+//					}
+//				}
+//			}
+			
+			for(Integer i:setIndex){
+				int value=0;
+				value=getHash(i+1, indexHash);
+				if(value<minValue){
+					minValue=value;
 				}
+				
 			}
 			arrResult[indexHash-1]=minValue;
 		}
