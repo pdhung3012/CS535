@@ -183,15 +183,20 @@ public class LSH {
 		String fpFileQuery="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"listDocForDuplicateDetector.txt";
 		
-		if(args.length>=3){
-			folderPath=args[0];
-			fpResultDup=args[1];
-			fpFileQuery=args[2];
-		}
-		
 		int numPermutations=800;
 		double simThreshold=0.5;
 		int numberBands=20;
+		
+		if(args.length>=6){
+			folderPath=args[0];
+			fpResultDup=args[1];
+			fpFileQuery=args[2];
+			numPermutations=Integer.parseInt(args[3]);
+			simThreshold=Double.parseDouble(args[4]);
+			numberBands=Integer.parseInt(args[5]);
+		}
+		
+
 		String[] arrQueries=FileIO.readStringFromFile(fpFileQuery).trim().split("\n");
 		
 		MinHash mh=new MinHash(folderPath,numPermutations);
