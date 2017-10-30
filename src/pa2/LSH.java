@@ -2,6 +2,7 @@ package pa2;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 
@@ -100,10 +101,12 @@ public class LSH {
 	
 	private int computeHash(int[] mhil,int T){
 		int result=0;
+		String strResult="";
+//		result=Arrays.hashCode(mhil);
 		for(int i=0;i<mhil.length;i++){
-			result+=mhil[i];
+			strResult+=mhil[i]+",";
 		}
-		result=result%T+1;
+		result=strResult.hashCode()%T+1;
 		return result;
 	}
 	
@@ -122,7 +125,7 @@ public class LSH {
 	public ArrayList<String> nearDuplciateDetector(String folder,int numPermutations,double simThreshold,String docName){
 		ArrayList<String> lstResult=new ArrayList<String>();
 		int N=docNames.length;
-		T=N+1;
+		T=20000*N;
 		while(!isPrime(T)){
 			T++;
 		}
@@ -188,7 +191,7 @@ public class LSH {
 			}
 		}
 		numberSSimilarity=lstSim.size();
-		System.out.println("T: "+T);
+	//	System.out.println("T: "+T);
 		return lstSim;
 	}
 	
@@ -204,7 +207,7 @@ public class LSH {
 		
 		int numPermutations=600;
 		double simThreshold=0.8;
-		int numberBands=20;
+		int numberBands=30;
 		
 		if(args.length>=6){
 			folderPath=args[0];
