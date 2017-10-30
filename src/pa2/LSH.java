@@ -158,10 +158,11 @@ public class LSH {
 				//find position for sim
 				int indexJ=0;
 				for(int j=0;j<lstApproxJac.size();j++){
-					if(lstApproxJac.get(j)>=approximateJaccard){
+					if(lstApproxJac.get(j)<=approximateJaccard){
 						indexJ=j;
 						break;
 					}
+					indexJ++;
 				}
 				lstApproxJac.add(indexJ, approximateJaccard);
 				lstSim.add(indexJ,lstResult.get(i));
