@@ -175,12 +175,19 @@ public class LSH {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
 		String folderPath = "data" + File.separator
 				+ "pa2" + File.separator + "F17PA2" + File.separator;
 		String fpResultDup="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"nearDuplicateResults.txt";
 		String fpFileQuery="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"listDocForDuplicateDetector.txt";
+		
+		if(args.length>=3){
+			folderPath=args[0];
+			fpResultDup=args[1];
+			fpFileQuery=args[2];
+		}
 		
 		int numPermutations=800;
 		double simThreshold=0.5;

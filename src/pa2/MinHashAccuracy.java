@@ -6,13 +6,37 @@ import util.FileIO;
 
 public class MinHashAccuracy {
 
+	private String fpResultExactJaccard;
+	
+	
+	
+	
+	public String getFpResultExactJaccard() {
+		return fpResultExactJaccard;
+	}
+
+	public void setFpResultExactJaccard(String fpResultExactJaccard) {
+		this.fpResultExactJaccard = fpResultExactJaccard;
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String folderPath = "data" + File.separator
 				+ "pa2" + File.separator + "space" + File.separator;
+		String fpResultExactJaccard="data" + File.separator
+				+ "pa2" + File.separator + "results" + File.separator+"comparePairToPair.txt";		
 		int numPermutations=800;
 		double errorParam=0.09;
+		
+		if(args.length>=4){
+			folderPath=args[0];
+			fpResultExactJaccard=args[1];
+			numPermutations=Integer.parseInt(args[2]);
+			errorParam=Double.parseDouble(args[3]);
+		}
+		
 		MinHashAccuracy mha=new MinHashAccuracy();
+		mha.setFpResultExactJaccard(fpResultExactJaccard);
 		mha.accuracy(folderPath, numPermutations, errorParam);
 		
 	}
@@ -23,8 +47,6 @@ public class MinHashAccuracy {
 		//File folder = new File(folderPath);
 		System.out.println(folder);
 		StringBuilder strPairToPairCompare=new StringBuilder();
-		String fpResultExactJaccard="data" + File.separator
-				+ "pa2" + File.separator + "results" + File.separator+"comparePairToPair.txt";
 		MinHash mh=new MinHash(folder, numPermutations);
 		System.out.println("Finish constructor");
 		String[] docs=mh.getAllDocs();

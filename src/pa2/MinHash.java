@@ -387,15 +387,26 @@ public class MinHash {
 		// TODO Auto-generated method stub
 		String folderPath = "data" + File.separator
 				+ "pa2" + File.separator + "articles" + File.separator;
+		String fpResultExactJaccard="data" + File.separator
+				+ "pa2" + File.separator + "results" + File.separator+"testExactJaccard.txt";
+		String fpResultApproxsJaccard="data" + File.separator
+				+ "pa2" + File.separator + "results" + File.separator+"testApproxJaccard.txt";
+		
+		if(args.length>=3){
+			folderPath=args[0];
+			fpResultExactJaccard=args[1];
+			fpResultApproxsJaccard=args[2];
+		}
+		
 		File folder = new File(folderPath);
 		int numOfPermutations = 400;
 		System.out.println(folderPath);
 		File[] arrFiles = folder.listFiles();
 		String strResultExact="",strResultApprox="";
-		String fpResultExactJaccard="data" + File.separator
-				+ "pa2" + File.separator + "results" + File.separator+"testExactJaccard.txt";
-		String fpResultApproxsJaccard="data" + File.separator
-				+ "pa2" + File.separator + "results" + File.separator+"testApproxJaccard.txt";
+		
+		
+		
+		
 		MinHash mh = new MinHash(folderPath, numOfPermutations);
 		for(int i=0;i<arrFiles.length-1;i++){
 			String fileName1 = arrFiles[i].getName();

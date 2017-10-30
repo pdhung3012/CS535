@@ -9,6 +9,10 @@ public class MinHashTime {
 		String folderPath = "data" + File.separator
 				+ "pa2" + File.separator + "space" + File.separator;
 		int numPermutations=600;
+		if(args.length>=2){
+			folderPath=args[0];
+			numPermutations=Integer.parseInt(args[1]);
+		}
 		MinHashTime mht=new MinHashTime();
 		mht.timer(folderPath, numPermutations);
 	}
