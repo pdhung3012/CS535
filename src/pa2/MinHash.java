@@ -391,7 +391,7 @@ public class MinHash {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String folderPath = "data" + File.separator
-				+ "pa2" + File.separator + "articles" + File.separator;
+				+ "pa2" + File.separator + "F17PA2" + File.separator;
 		String fpResultExactJaccard="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"testExactJaccard.txt";
 		String fpResultApproxsJaccard="data" + File.separator
@@ -413,25 +413,30 @@ public class MinHash {
 		
 		
 		MinHash mh = new MinHash(folderPath, numOfPermutations);
-		for(int i=0;i<arrFiles.length-1;i++){
-			String fileName1 = arrFiles[i].getName();
-			String fileName2 = arrFiles[i+1].getName();
-			
-			//System.out.println(fileName1 + " " + fileName2);
-			
-			double resultExact = mh.extractJaccard(fileName1, fileName2);
-			double resultApprox = mh.approximateJaccard(fileName1, fileName2);
-			if(resultExact>0){
-				System.out.println("Exact\t"+fileName1 + "\t" + fileName2 + "\t" + resultExact);
-				strResultExact+=fileName1 + "\t" + fileName2 + "\t" + resultExact+"\n";
-			}
-			if(resultApprox>0){
-				System.out.println("Approx\t"+fileName1 + "\t" + fileName2 + "\t" + resultApprox);
-				strResultApprox+=fileName1 + "\t" + fileName2 + "\t" + resultApprox+"\n";
-				//break;
-			}
-			
-		}
+		String fileName1 = "baseball10.txt";
+		String fileName2 = "baseball10.txt.copy2";		
+		double resultExact = mh.extractJaccard(fileName1, fileName2);
+		double resultApprox = mh.approximateJaccard(fileName1, fileName2);
+		System.out.println(fileName1 + "\t" + fileName2 + "\t" + resultApprox+"\t"+resultExact);
+//		for(int i=0;i<arrFiles.length-1;i++){
+//			String fileName1 = arrFiles[i].getName();
+//			String fileName2 = arrFiles[i+1].getName();
+//			
+//			//System.out.println(fileName1 + " " + fileName2);
+//			
+//			double resultExact = mh.extractJaccard(fileName1, fileName2);
+//			double resultApprox = mh.approximateJaccard(fileName1, fileName2);
+//			if(resultExact>0){
+//				System.out.println("Exact\t"+fileName1 + "\t" + fileName2 + "\t" + resultExact);
+//				strResultExact+=fileName1 + "\t" + fileName2 + "\t" + resultExact+"\n";
+//			}
+//			if(resultApprox>0){
+//				System.out.println("Approx\t"+fileName1 + "\t" + fileName2 + "\t" + resultApprox);
+//				strResultApprox+=fileName1 + "\t" + fileName2 + "\t" + resultApprox+"\n";
+//				//break;
+//			}
+//			
+//		}
 		FileIO.writeStringToFile(strResultExact,fpResultExactJaccard);
 		FileIO.writeStringToFile(strResultApprox,fpResultApproxsJaccard);
 		
