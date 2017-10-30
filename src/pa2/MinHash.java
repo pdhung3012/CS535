@@ -38,7 +38,7 @@ public class MinHash {
 	public String printHashPermutation(){
 		StringBuilder sb=new StringBuilder();
 		for(int i=0;i<numPermutations;i++){
-			System.out.println("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]);
+			//System.out.println("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]);
 			sb.append("Hash "+(i+1)+": "+a[i]+"\t"+b[i]+"\t"+c[i]);
 		}
 		return sb.toString();
@@ -87,8 +87,8 @@ public class MinHash {
 		a=new int[numPermutations];
 		b=new int[numPermutations];
 		for(int i=1;i<=numPermutations;i++){
-			a[i-1]=ThreadLocalRandom.current().nextInt(1, setVocabularies.size() + 1);
-			b[i-1]=ThreadLocalRandom.current().nextInt(1, setVocabularies.size() + 1);
+			a[i-1]=ThreadLocalRandom.current().nextInt(1, 1000);
+			b[i-1]=ThreadLocalRandom.current().nextInt(1, 10000);
 		}
 		c=getListFirstPrime();
 		
@@ -157,23 +157,44 @@ public class MinHash {
 		return (endTime-startTime);
 	}
 	
+	boolean isPrime(int n) {
+	    //check if n is a multiple of 2
+	    if (n%2==0) return false;
+	    //if not, then just check the odds
+	    for(int i=3;i*i<=n;i+=2) {
+	        if(n%i==0)
+	            return false;
+	    }
+	    return true;
+	}
+	
 	private int[] getListFirstPrime(){
 		int[] arrResult=new int[numPermutations];
 		int indexCountPrime=0;
-		int nextCandidate=setVocabularies.size()+1;
+		int nextCandidate=(setVocabularies.size()+1);
 		arrResult[0]=1;
-		while(indexCountPrime<numPermutations ){
-			int countMod=0;
-			nextCandidate--;
-			for(int i=1;i<=nextCandidate;i++){
-				if(nextCandidate%i==0){
-					countMod++;
-				}
+		ArrayList<Integer> lstPrimes=new ArrayList<Integer>();
+//		while(indexCountPrime<numPermutations ){
+//			int countMod=0;
+//			nextCandidate--;
+//			for(int i=1;i<=nextCandidate;i++){
+//				if(nextCandidate%i==0){
+//					countMod++;
+//				}
+//			}
+//			if(countMod==2){
+//				arrResult[indexCountPrime]=nextCandidate;
+//				indexCountPrime++;
+//			}			
+//		}
+		for(int i=2;i<setVocabularies.size();i++){
+			if(isPrime(i)){
+				lstPrimes.add(i);
 			}
-			if(countMod==2){
-				arrResult[indexCountPrime]=nextCandidate;
-				indexCountPrime++;
-			}			
+		}
+		for(int i=0;i<numPermutations;i++){
+			int indexRandomPrime=ThreadLocalRandom.current().nextInt(0, lstPrimes.size());
+			arrResult[i]=lstPrimes.get(indexRandomPrime);
 		}
 		return arrResult;
 	}
@@ -316,10 +337,15 @@ public class MinHash {
 		return result;
 	}
 	
+	//try to generate random permutation
 	private int getHash(int index,int hashNumber){
 		return ((a[hashNumber-1]*index+b[hashNumber-1])%c[hashNumber-1]);
+		//return ThreadLocalRandom.current().nextInt(1, setVocabularies.size()+1);
+	
 	}
 
+	
+	
 	public int[] minHashSig(String fileName) {
 		//ArrayList<String> lstWordFile1 = removeAllStopWords(folder + fileName);		
 		//int indexI=getIndexOfDoc(fileName);
