@@ -153,14 +153,14 @@ public class LSH {
 				continue;
 			}
 			double approximateJaccard=getmHash().approximateJaccard(docName, lstResult.get(i));
-			double exactJaccard=getmHash().extractJaccard(docName, lstResult.get(i));
-			if(exactJaccard>=simThreshold){
+			//double exactJaccard=getmHash().extractJaccard(docName, lstResult.get(i));
+			if(approximateJaccard>=simThreshold){
 				//find position for sim
 				int indexJ=0;
 				for(int j=0;j<lstApproxJac.size();j++){
-					if(lstApproxJac.get(j)>approximateJaccard){
+					if(lstApproxJac.get(j)>=approximateJaccard){
 						indexJ=j;
-						continue;
+						break;
 					}
 				}
 				lstApproxJac.add(indexJ, approximateJaccard);
