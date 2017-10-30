@@ -366,8 +366,8 @@ public class MinHash {
 //		for (Integer i : setIndex) {
 //			lstIndex.add(i);
 //		}
-		System.out.println(setVocabularies.toString());
-		System.out.println(setIndex.size()+" size of "+fileName+"\t"+setIndex.toString());
+//		System.out.println(setVocabularies.toString());
+//		System.out.println(setIndex.size()+" size of "+fileName+"\t"+setIndex.toString());
 //		Scanner sc=new Scanner(System.in);
 //		sc.next();
 		for (int indexHash = 1; indexHash <= numPermutations; indexHash++) {
@@ -440,7 +440,7 @@ public class MinHash {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String folderPath = "data" + File.separator + "pa2" + File.separator
-				+ "space_2" + File.separator;
+				+ "space" + File.separator;
 		String fpResultExactJaccard = "data" + File.separator + "pa2"
 				+ File.separator + "results" + File.separator
 				+ "testExactJaccard.txt";

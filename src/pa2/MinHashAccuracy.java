@@ -26,7 +26,7 @@ public class MinHashAccuracy {
 		String fpResultExactJaccard="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"comparePairToPair.txt";		
 		int numPermutations=400;
-		double errorParam=0.09;
+		double errorParam=0.04;
 		
 		if(args.length>=4){
 			folderPath=args[0];

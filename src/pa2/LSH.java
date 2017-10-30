@@ -184,8 +184,8 @@ public class LSH {
 		String fpFileQuery="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"listDocForDuplicateDetector.txt";
 		
-		int numPermutations=800;
-		double simThreshold=0.5;
+		int numPermutations=600;
+		double simThreshold=0.8;
 		int numberBands=20;
 		
 		if(args.length>=6){
