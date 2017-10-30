@@ -1,0 +1,3 @@
+java -cp /Users/hungphan/git/cs535/target/classes/ pa2/MinHashAccuracy /Users/hungphan/git/cs535/data/pa2/space/ /Users/hungphan/git/cs535/data/pa2/results/comparePairToPair.txt 800 0.9
+java -cp /Users/hungphan/git/cs535/target/classes/ pa2/MinHashTime /Users/hungphan/git/cs535/data/pa2/space/ 600
+java -cp /Users/hungphan/git/cs535/target/classes/ pa2/LSH /Users/hungphan/git/cs535/data/pa2/F17PA2/ /Users/hungphan/git/cs535/data/pa2/results/nearDuplicateResults.txt /Users/hungphan/git/cs535/data/pa2/results/listDocForDuplicateDetector.txt 800 0.5 20

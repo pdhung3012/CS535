@@ -128,11 +128,15 @@ public class MinHash {
 	public long calculateTimeForMinHash(){
 		long startTime,endTime;
 		startTime=System.currentTimeMillis();
-		arrHashSig=new int[allDocs.length][numPermutations];
+		arrHashSig=new int[numPermutations][allDocs.length];
 		for (int i = 0; i < allDocs.length; i++) {
 			
 			int[] arrResult=minHashSig(allDocs[i]);
-			arrHashSig[i]=arrResult;		
+			for(int j=0;j<arrResult.length;j++){
+				arrHashSig[j][i]=arrResult[j];
+			//	System.out.println(j+"\t"+i);
+			}
+					
 		}
 		endTime=System.currentTimeMillis();
 		return (endTime-startTime);
@@ -351,6 +355,7 @@ public class MinHash {
 		
 		for(int i=0;i<mh1.length;i++){
 			mh1[i]=arrHashSig[i][index1];
+		//	System.out.println(i+"\t"+index1+"\t"+index2);
 			mh2[i]=arrHashSig[i][index2];
 			if(mh1[i]==mh2[i]){
 				result++;

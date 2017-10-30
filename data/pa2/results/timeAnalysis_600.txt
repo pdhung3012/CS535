@@ -2,7 +2,7 @@ vocab of 1001 doc is 41008
 end doc 
 end hash doc 
 finish Constructor
-Exact jaccard time: 62157
-Construct minhash time: 13950
-Approx jaccard time: 1194
-Total Approx time: 15144
+Exact jaccard time: 84343
+Construct minhash time: 4519
+Approx jaccard time: 10483
+Total Approx time: 15002

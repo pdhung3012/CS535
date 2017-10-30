@@ -27,6 +27,7 @@ public class MinHashTime {
 			for(int j=i+1;j<docs.length;j++){
 				double exactJaccard=mh.extractJaccard(docs[i],docs[j]);
 				//double approxJaccard=mh.approximateJaccard(docs[i],docs[j]);
+			//	System.out.println("Exact: "+docs[i]+"\t"+docs[j]);
 			}
 		}		
 		long endTime   = System.currentTimeMillis();
@@ -40,6 +41,7 @@ public class MinHashTime {
 			for(int j=i+1;j<docs.length;j++){
 				//double exactJaccard=mh.extractJaccard(docs[i],docs[j]);
 				double approxJaccard=mh.approximateJaccard(docs[i],docs[j]);
+			//	System.out.println("Approx: "+docs[i]+"\t"+docs[j]);
 			}
 		}		
 		endTime   = System.currentTimeMillis();
