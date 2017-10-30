@@ -25,7 +25,7 @@ public class MinHashAccuracy {
 				+ "pa2" + File.separator + "space" + File.separator;
 		String fpResultExactJaccard="data" + File.separator
 				+ "pa2" + File.separator + "results" + File.separator+"comparePairToPair.txt";		
-		int numPermutations=800;
+		int numPermutations=400;
 		double errorParam=0.09;
 		
 		if(args.length>=4){
