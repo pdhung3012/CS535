@@ -1,5 +1,6 @@
 package pa3;
 
+import java.io.File;
 import java.util.*;
 import java.util.Map.*;
 
@@ -19,6 +20,8 @@ public class WeightedQ {
 		}
 
 	}
+	
+	
 
 	public Entry<String, Integer> extract() {
 		List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(this.queue.entrySet());
@@ -33,6 +36,12 @@ public class WeightedQ {
 		this.queue.remove(key);
 
 		return tuple;
+	}
+	
+	public static void main(String[] args){
+		String fpStartWikiPage="";
+		String fpSetOfTopic="data"+File.separator+"pa3"+File.separator+"TopicForWeightedQ.txt";
+		
 	}
 
 }
