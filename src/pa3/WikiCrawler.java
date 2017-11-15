@@ -51,11 +51,11 @@ public class WikiCrawler {
 			GraphNode rootNode = new GraphNode("", root);
 			if (!forbiddenURLS.containsKey(root)) {
 				rootNode.downloadPagesAndLinks(BASE_URL);
-				queue.add(rootNode);
+				queue.addLast(rootNode);
 			}
 
 			while (!queue.isEmpty()) {
-				GraphNode node = queue.remove();
+				GraphNode node = queue.removeFirst();
 				processingLinks(node);
 
 				if (visited.size() > this.maxGraphNodes) {
@@ -64,7 +64,7 @@ public class WikiCrawler {
 
 			}
 			while (!queue.isEmpty()) {
-				GraphNode node = queue.remove();
+				GraphNode node = queue.removeFirst();
 				extractEdgesFromatchs(node);
 			}
 
