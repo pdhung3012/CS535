@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import util.FileIO;
+
 public class WikiCrawler {
 
 	// initialise the queue and visited list
@@ -65,15 +67,18 @@ public class WikiCrawler {
 				extractEdgesFromatchs(node);
 			}
 
-			PrintWriter writer = new PrintWriter(new FileOutputStream(this.fileName), true);
+			//PrintWriter writer = new PrintWriter(new FileOutputStream(this.fileName), true);
 
-			writer.println((visited.size()));
-
+			StringBuilder sb=new StringBuilder();
+			//writer.println((visited.size()));
+			sb.append(visited.size()+"\n");
 			for (GraphNode link : crawled) {
-				writer.println(link.parent + " " + link.child);
+				//writer.println(link.parent + " " + link.child);
+				sb.append(link.parent + " " + link.child+"\n");
 			}
-			writer.close();
-
+			//writer.close();
+			FileIO.writeStringToFile(sb.toString(), this.fileName);
+			
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -164,7 +169,7 @@ public class WikiCrawler {
 
 		String[] keywords = {"Tennis"};
 
-		WikiCrawler cr = new WikiCrawler("/wiki/Tennis", keywords, 100, "/data/pa3/tenniswiki.txt", false);
+		WikiCrawler cr = new WikiCrawler("/wiki/Tennis", keywords, 100, "data"+File.separator+"pa3"+File.separator+"tenniswiki.txt", false);
 
 		long startTime = System.currentTimeMillis();
 		cr.crawl();
