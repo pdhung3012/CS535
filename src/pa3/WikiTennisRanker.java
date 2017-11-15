@@ -10,7 +10,6 @@ public class WikiTennisRanker {
 		WikiTennisRanker wtr = new WikiTennisRanker();
 		wtr.computePageRank(0.01);
 		wtr.computePageRank(0.005);
-
 	}
 
 	public void computePageRank(double error) throws Exception {

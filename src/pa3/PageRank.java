@@ -25,7 +25,6 @@ public class PageRank {
 		System.out.println("Number of nodes in the graph:" + numOfNodes);
 		pageRankMap = computePageRanks();
 	}
-
 	// Returns the rank of a particular page
 	public double pageRankOf(String vertex) {
 		vertex = vertex.toLowerCase();
