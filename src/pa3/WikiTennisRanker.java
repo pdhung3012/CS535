@@ -14,7 +14,6 @@ public class WikiTennisRanker {
 
 	public void computePageRank(double error) throws Exception {
 		String file = "data/pa3/wikiTennis.txt";
-	
 		PageRank pr = new PageRank(file, error);
 
 		System.out.println("For epsilon= " + error + "the results are: " + pr.getNumOfIterations());

@@ -16,6 +16,7 @@ public class PageRank {
 	private int numOfIterations;
 	private static final double BETA = 0.85;
 
+	
 	PageRank(String fileName, double epsilon) {
 		this.fileName = fileName;
 		this.epsilon = epsilon;
