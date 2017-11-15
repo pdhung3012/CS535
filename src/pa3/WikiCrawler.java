@@ -13,7 +13,6 @@ public class WikiCrawler {
 	// initialise the queue and visited list
 	private LinkedList<GraphNode> queue = new LinkedList<GraphNode>();
 	private Set<String> visited = new HashSet<String>();
-	private Set<String> visitedIrrelevant = new HashSet<String>();
 	private List<GraphNode> crawled = new LinkedList<GraphNode>();
 	private HashMap<String, Integer> forbiddenURLS = new HashMap<String, Integer>();
 
@@ -30,7 +29,7 @@ public class WikiCrawler {
 		for (int i = 0; i < keyWords.length; i++) {
 			this.keyWords[i] = this.keyWords[i].toLowerCase();
 		}
-		this.maxGraphNodes = maxGraphNodes;
+		this.maxGraphNodes = maxGraphNodes-1;
 		this.fileName = fileName;
 		this.isWeighted = isWeighted;
 	}
@@ -39,17 +38,20 @@ public class WikiCrawler {
 
 		try {
 			excludeRobotTxt();
+			
+			//All pages are not allowed to download
 			if (forbiddenURLS.containsKey("*")) {
 				System.out.println("Not allowed to download this page!");
 			}
-			String parent = this.seedURL;
-			visited.add(parent);
+			
+			String root = this.seedURL;
+			visited.add(root);
 
 			GraphNode.keyWords = this.keyWords.clone();
-			GraphNode seed = new GraphNode("", parent);
-			if (!forbiddenURLS.containsKey(parent)) {
-				seed.downloadPagesAndLinks(BASE_URL);
-				queue.add(seed);
+			GraphNode rootNode = new GraphNode("", root);
+			if (!forbiddenURLS.containsKey(root)) {
+				rootNode.downloadPagesAndLinks(BASE_URL);
+				queue.add(rootNode);
 			}
 
 			while (!queue.isEmpty()) {
@@ -63,20 +65,19 @@ public class WikiCrawler {
 			}
 			while (!queue.isEmpty()) {
 				GraphNode node = queue.remove();
-
 				extractEdgesFromatchs(node);
 			}
 
-			//PrintWriter writer = new PrintWriter(new FileOutputStream(this.fileName), true);
+			
 
 			StringBuilder sb=new StringBuilder();
-			//writer.println((visited.size()));
+
 			sb.append(visited.size()+"\n");
 			for (GraphNode link : crawled) {
-				//writer.println(link.parent + " " + link.child);
+				
 				sb.append(link.parent + " " + link.child+"\n");
 			}
-			//writer.close();
+		
 			FileIO.writeStringToFile(sb.toString(), this.fileName);
 			
 		} catch (Exception e) {
@@ -98,7 +99,7 @@ public class WikiCrawler {
 					int startIndex = line.indexOf(":") + 1;
 					int endIndex = line.length();
 					forbiddenURL = line.substring(startIndex, endIndex).trim();
-					System.out.println("forbidden:"+forbiddenURL);
+					//System.out.println("forbidden:"+forbiddenURL);
 					forbiddenURLS.put(forbiddenURL, ++i);
 				}
 			}
@@ -110,34 +111,34 @@ public class WikiCrawler {
 
 	void processingLinks(GraphNode node1) {
 		String parent = node1.child;
-		final HashMap<String, GraphNode> uniqueEdges = new HashMap<String, GraphNode>();
-		for (String address : node1.links) {
+		final HashMap<String, GraphNode> edgeSet = new HashMap<String, GraphNode>();
+		for (String webAdd : node1.links) {
 
 			if (visited.size() > this.maxGraphNodes) {
 				break;
 			}
 
-			address = address.replace("\"", "");
-			if (address != null && (!forbiddenURLS.containsKey(address))) {
-				if (!address.contains(":") && (!address.contains("#"))) {
-					GraphNode node = new GraphNode(parent, address);
+			webAdd = webAdd.replace("\"", "");
+			if (webAdd != null && !forbiddenURLS.containsKey(webAdd)) {
+				if (!webAdd.contains(":") && !webAdd.contains("#")) {
+					GraphNode node = new GraphNode(parent, webAdd);
 
-					if (!parent.equalsIgnoreCase(address)) {
-						if (!visited.contains(address) && !visitedIrrelevant.contains(address)) {
+					if (!parent.equalsIgnoreCase(webAdd)) {
+						if (!visited.contains(webAdd) /* && !visitedIrrelevant.contains(webAdd)*/) {
 
-							System.out.println("Downloading and processing " + counterDownload++ + " " + address
-									+ "  No of Visited nodes -" + visited.size());
+							System.out.println("Downloading page #: " + counterDownload++ + " " + webAdd
+									+ "  No of Visited nodes: " + visited.size());
 
 							if (node.downloadPagesAndLinks(BASE_URL)) {
 								queue.add(node);
-								if (!uniqueEdges.containsKey(address)) {
-									uniqueEdges.put(address, node);
+								if (!edgeSet.containsKey(webAdd)) {
+									edgeSet.put(webAdd, node);
 									crawled.add(node);
 								}
-								visited.add(address);
-							} else {
-								visitedIrrelevant.add(address);
-							}
+								visited.add(webAdd);
+							} //else {
+								//visitedIrrelevant.add(webAdd);
+							//}
 						}
 					}
 				}
@@ -148,7 +149,7 @@ public class WikiCrawler {
 
 	void extractEdgesFromatchs(GraphNode node) {
 
-		final HashMap<String, GraphNode> uniqueEdges = new HashMap<String, GraphNode>();
+		final HashMap<String, GraphNode> edgeSet = new HashMap<String, GraphNode>();
 		for (String address : node.links) {
 			address = address.replace("\"", "");
 			if (address != null && address.compareToIgnoreCase(node.child) != 0) {// revert
@@ -156,13 +157,13 @@ public class WikiCrawler {
 					GraphNode node1 = new GraphNode(node.child, address);
 
 					if (visited.contains(address)) {
-						uniqueEdges.put(address, node1);
+						edgeSet.put(address, node1);
 					}
 
 				}
 			}
 		}
-		crawled.addAll(uniqueEdges.values());
+		crawled.addAll(edgeSet.values());
 	}
 
 	public static void main(String[] arg) {
@@ -170,12 +171,14 @@ public class WikiCrawler {
 		String[] keywords = {"Tennis"};
 
 		WikiCrawler cr = new WikiCrawler("/wiki/Tennis", keywords, 100, "data"+File.separator+"pa3"+File.separator+"tenniswiki.txt", false);
-
 		long startTime = System.currentTimeMillis();
+		System.out.println("Crawling started at:"+ startTime);
 		cr.crawl();
 		long endTime = System.currentTimeMillis();
+		System.out.println("Crawling ended at:"+ endTime);
 		long timeTaken = endTime - startTime;
-		System.out.println("Data Written to file");
+		System.out.println("Total time taken to crawl :"+ timeTaken);
+		System.out.println("Writing to file complete!");
 
 	}
 }
@@ -202,8 +205,8 @@ class GraphNode {
 		InputStream is = null;
 		try {
 
-			if (counter % 200 == 0) {
-				Thread.sleep(10000);
+			if (counter % 10 == 0) {
+				Thread.sleep(3000);
 			}
 			counter++;
 
@@ -234,43 +237,27 @@ class GraphNode {
 
 	}
 
-	@SuppressWarnings("resource")
+
 	boolean downloadPagesAndLinks(String baseURL) {
-		InputStream isr = null;
+		
 		BufferedReader br = null;
 		try {
 			Matcher match;
 			Pattern pattern = null;
-
+			
 			String hrefPattern = "/wiki/(?:[A-Za-z0-9-._~!#$&'()*+,;=:@]|%[0-9a-fA-F]{2})*";
 			pattern = Pattern.compile(hrefPattern);
-
-			String subChild = child.substring(child.lastIndexOf("/") + 1);
-			URL urlraw = new URL(baseURL + "/w/index.php?title=" + subChild + "&action=raw");
-			isr = urlraw.openStream();
-			br = new BufferedReader(new InputStreamReader(isr));
-
-			String ln, raw = "";
-			while ((ln = br.readLine()) != null) {
-				raw += ln.toLowerCase();
-			}
-
-			for (String str : keyWords) {
-				if (!raw.contains(str)) {
-					return false;
-				}
-			}
-
-			if (counter % 100 == 0) {
-				Thread.sleep(10000);
+			
+		
+			if (counter % 10 == 0) {
+				Thread.sleep(3000);
 			}
 			counter++;
 
+			//Logging start time of processing the page
 			long startTime = System.currentTimeMillis();
 
 			URL urlStream = new URL(baseURL + this.child);
-
-			Set<String> keys = new HashSet<String>();
 
 			InputStream is = urlStream.openStream();
 			br = new BufferedReader(new InputStreamReader(is));
@@ -279,32 +266,26 @@ class GraphNode {
 			Boolean isP = false;
 			while ((line = br.readLine()) != null) {
 
-				if (line.contains("<p>")) { // revert
+				if (line.contains("<p>")) {
 					isP = true;
 				}
 
-				for (String str : keyWords) {
-					if (line.contains(str))
-						keys.remove(str);
-				}
 				if (isP && line.contains("<a href=")) {
 
 					match = pattern.matcher(line);
 
 					while (match.find()) {
-						String address = line.substring(match.start(0), match.end(0));// match.group(1);
+						String address = line.substring(match.start(0), match.end(0));
 						links.add(address);
 					}
 				}
 			}
+			//logging end time of processing the page
 			long endTime = System.currentTimeMillis();
 			long timeTaken = endTime - startTime;
 			totalTime += timeTaken;
 			is.close();
 
-			/*
-			 * if(!keys.isEmpty()){ return false; }
-			 */
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -312,7 +293,7 @@ class GraphNode {
 			return false;
 		} finally {
 			try {
-				isr.close();
+				
 				br.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
