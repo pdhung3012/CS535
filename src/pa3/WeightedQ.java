@@ -158,9 +158,12 @@ public class WeightedQ {
 		int maxDistance=1000000;
 		int currentDistance=maxDistance;
 		
+		//System.out.println(lstIndexWord1.size()+"\t"+lstIndexWord2.size());
+		
 		for(int l=0;l<lstIndexWord1.size();l++){
 			for(int k=0;k<lstIndexWord2.size();k++){
-				int candidate=Math.abs(k-l);
+				int candidate=Math.abs(lstIndexWord1.get(l)-lstIndexWord2.get(k));
+				//System.out.println(candidate);
 				if(candidate<=currentDistance){
 					currentDistance=candidate;
 				}
@@ -190,7 +193,7 @@ public class WeightedQ {
 		ArrayList<String> lstOutput = new ArrayList<String>();
 		ArrayList<String> lstWords = new ArrayList<String>();
 		lstWords = getLstWordsFromFile(fpInputTopics);
-		int indexTried = 0, maxTried = 100;
+		int indexTried = 0, maxTried = 10;
 		int minDistanceAccept=20;
 		boolean isDownloadSuccess = false;
 		while (!isDownloadSuccess && indexTried < maxTried) {
@@ -202,7 +205,12 @@ public class WeightedQ {
 		String contentProcess=strWebContent.trim().toLowerCase().replaceAll(
 				":", " ").replaceAll("_", " ").replaceAll("\\(", " ").replaceAll("\\)", " ").trim();
 		contentProcess=getOneSpaceContent(contentProcess);
-
+		if(isDownloadSuccess){
+			System.out.println("Success reading base web after "+indexTried+" times");
+		} else{
+			System.out.println("Failed reading base web after "+indexTried+" times");
+		}
+		
 		for (int i = 0; i < links.size(); i++) {
 			//System.out.println(links.get(i));
 			//System.out.println(lstWords.toString());
@@ -212,11 +220,11 @@ public class WeightedQ {
 			} else {
 				String[] arrInput = links.get(i).trim().split("/");
 				String strLinkContent = arrInput[arrInput.length - 1];
-				String strContentSpace = getOneSpaceContent(strLinkContent.replaceAll(
+				String strContentLink = getOneSpaceContent(strLinkContent.replaceAll(
 						":", " ").replaceAll("_", " ").replaceAll("\\(", " ").replaceAll("\\)", " ").toLowerCase());
-				int minDist=distWordAndListOfWord(strContentSpace, lstWords, contentProcess);
+				int minDist=distWordAndListOfWord(strContentLink, lstWords, contentProcess);
 				double weighti=0;
-				System.out.println(links.get(i)+" "+minDist);
+				//System.out.println(links.get(i)+" "+minDist);
 				if(minDist<=minDistanceAccept){
 					weighti=1.0/(minDist+2);
 					add(links.get(i), weighti);
@@ -229,9 +237,11 @@ public class WeightedQ {
 
 		// get WeightedQ
 		lstOutput = new ArrayList<String>();
-		for (String str : queue.keySet()) {
-			Double val = queue.get(str);
-			lstOutput.add(str + "\t" + val);
+		int queueSize= queue.keySet().size();
+		
+		for (int i=0;i<queueSize;i++) {
+			Entry<String,Double> item=extract();
+			lstOutput.add(item.getKey() + "\t" + item.getValue());
 		}
 
 		return lstOutput;
@@ -299,6 +309,8 @@ public class WeightedQ {
 				+ "TopicForWeightedQ.txt";
 		String fpOutputText = "data" + File.separator + "pa3" + File.separator
 				+ "ResultWeightQ.txt";
+		String fpOutputBaseWebContent = "data" + File.separator + "pa3" + File.separator
+				+ "ResultBaseWebContent.txt";
 		WeightedQ wq = new WeightedQ();
 		ArrayList<String> lstOutput = wq.heuristicComputeWeightedQ(
 				urlStartWikiPage, fpSetOfTopic);
@@ -306,12 +318,13 @@ public class WeightedQ {
 		sb.append("Craw from :" + urlStartWikiPage + "\n");
 		sb.append("Set of topics :" + wq.getLstWordsFromFile(fpSetOfTopic)
 				+ "\n");
-		sb.append("Num of results :" + lstOutput.size()+"/"+wq.getLinks().size() + "\n");
+		sb.append("Num of results :" +wq.getLinks().size() + "\n");
 		for (int i = 0; i < lstOutput.size(); i++) {
 			// System.out.println(i+"\t"+lstLinks.get(i));
 			sb.append(lstOutput.get(i) + "\n");
 		}
 		FileIO.writeStringToFile(sb.toString(), fpOutputText);
+		FileIO.writeStringToFile(wq.getStrWebContent(), fpOutputBaseWebContent);
 		System.out.println("Check the result in " + fpOutputText);
 
 	}
