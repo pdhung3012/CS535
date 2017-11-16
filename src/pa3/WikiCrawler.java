@@ -65,7 +65,7 @@ public class WikiCrawler {
 			}
 			while (!queue.isEmpty()) {
 				GraphNode node = queue.removeFirst();
-				extractEdgesFromatchs(node);
+				getEdges(node);
 			}
 
 			
@@ -147,7 +147,7 @@ public class WikiCrawler {
 
 	}
 
-	void extractEdgesFromatchs(GraphNode node) {
+	void getEdges(GraphNode node) {
 
 		final HashMap<String, GraphNode> edgeSet = new HashMap<String, GraphNode>();
 		for (String address : node.links) {
