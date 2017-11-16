@@ -179,7 +179,7 @@ public class WikiCrawler {
 		long timeTaken = endTime - startTime;
 		System.out.println("Total time taken to crawl :"+ timeTaken);
 		System.out.println("Writing to file complete!");
-
+//
 	}
 }
 
