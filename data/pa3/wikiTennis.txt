@@ -1,6 +1,6 @@
 1000
 /wiki/tennis /wiki/Racket_sport
-/wiki/tennis /wiki/Tennis_racket
+/wiki/tennis /wiki/Tennis_racket 
 /wiki/tennis /wiki/Tennis_ball
 /wiki/tennis /wiki/Tennis_court
 /wiki/tennis /wiki/Olympic_Games
