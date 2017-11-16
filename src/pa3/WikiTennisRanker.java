@@ -17,7 +17,7 @@ public class WikiTennisRanker {
 		String file = "data/pa3/wikiTennis.txt";
 		PageRank pr = new PageRank(file, error);
 
-		System.out.println("For epsilon= " + error + "the results are: " + pr.getNumOfIterations());
+		System.out.println("For epsilon= " + error + " the number of iteration are: " + pr.getNumOfIterations());
 		System.out.println("Top 10 pages with highest page rank: \n " + Arrays.toString(pr.topKPageRank(10)) + "\n");
 		System.out.println("Top 10 pages with highest in-degree: \n" + Arrays.toString(pr.topKInDegree(10)) + "\n");
 		System.out.println("Top 10 pages with highest out-degree:\n " + Arrays.toString(pr.topKOutDegree(10)) + "\n");
