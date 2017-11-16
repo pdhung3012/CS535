@@ -206,11 +206,17 @@ public class WeightedQ {
 		for (int i = 0; i < links.size(); i++) {
 			//System.out.println(links.get(i));
 			//System.out.println(lstWords.toString());
+			String strCompareWord=links.get(i);
 			if (isContainInURLLink(links.get(i), lstWords)) {				
 				add(links.get(i), 1.0);
 			} else {
-				int minDist=distWordAndListOfWord(links.get(i), lstWords, contentProcess);
+				String[] arrInput = links.get(i).trim().split("/");
+				String strLinkContent = arrInput[arrInput.length - 1];
+				String strContentSpace = getOneSpaceContent(strLinkContent.replaceAll(
+						":", " ").replaceAll("_", " ").replaceAll("\\(", " ").replaceAll("\\)", " ").toLowerCase());
+				int minDist=distWordAndListOfWord(strContentSpace, lstWords, contentProcess);
 				double weighti=0;
+				System.out.println(links.get(i)+" "+minDist);
 				if(minDist<=minDistanceAccept){
 					weighti=1.0/(minDist+2);
 					add(links.get(i), weighti);
