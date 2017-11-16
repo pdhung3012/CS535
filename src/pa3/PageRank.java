@@ -22,7 +22,7 @@ public class PageRank {
 		this.fileName = fileName;
 		this.epsilon = epsilon;
 		processGraph();
-		System.out.println("Processed graph");
+		//System.out.println("Processed graph");
 		this.numOfNodes = nodesInGraph.size();
 		System.out.println("Number of nodes in the graph:" + numOfNodes);
 		pageRankMap = computePageRanks();
