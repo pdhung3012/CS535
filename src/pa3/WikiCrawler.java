@@ -54,7 +54,7 @@ public class WikiCrawler {
 			visited.add(root);
 
 			GraphNode.keyWords = this.keyWords.clone();
-			GraphNode rootNode = new GraphNode("", root);
+			GraphNode rootNode = new GraphNode("", root,isWeighted);
 			rootNode.setWq(weightedQ);
 			rootNode.setLstKeyWords(lstKeyWords);
 			if (!forbiddenURLS.containsKey(root)) {
@@ -95,7 +95,9 @@ public class WikiCrawler {
 
 	void excludeRobotTxt() {
 		try {
-			GraphNode node = new GraphNode(BASE_URL, "/robots.txt");
+			GraphNode node = new GraphNode(BASE_URL, "/robots.txt",isWeighted);
+			node.setWq(weightedQ);
+			node.setLstKeyWords(lstKeyWords);
 			node.downloadPage(BASE_URL);
 			int i = 1;
 			String[] lines = node.content.split("\n");
@@ -128,7 +130,7 @@ public class WikiCrawler {
 			webAdd = webAdd.replace("\"", "");
 			if (webAdd != null && !forbiddenURLS.containsKey(webAdd)) {
 				if (!webAdd.contains(":") && !webAdd.contains("#")) {
-					GraphNode node = new GraphNode(parent, webAdd);
+					GraphNode node = new GraphNode(parent, webAdd,isWeighted);
 					node.setLstKeyWords(lstKeyWords);
 					node.setWq(weightedQ);
 					if (!parent.equalsIgnoreCase(webAdd)) {
@@ -160,8 +162,9 @@ public class WikiCrawler {
 			address = address.replace("\"", "");
 			if (address != null && address.compareToIgnoreCase(node.child) != 0) {// revert
 				if ((!address.contains(":")) && (!address.contains("#"))) {
-					GraphNode node1 = new GraphNode(node.child, address);
-
+					GraphNode node1 = new GraphNode(node.child, address,isWeighted);
+					node1.setLstKeyWords(lstKeyWords);
+					node1.setWq(weightedQ);
 					if (visited.contains(address)) {
 						edgeSet.put(address, node1);
 					}
@@ -175,7 +178,7 @@ public class WikiCrawler {
 	public static void main(String[] arg) {
 
 		String[] keywords = { "Tennis" };
-		boolean isWeighted = false;
+		boolean isWeighted = true;
 		WikiCrawler cr = new WikiCrawler("/wiki/Tennis", keywords, 100,
 				"data" + File.separator + "pa3" + File.separator + "tenniswiki.txt", isWeighted);
 		long startTime = System.currentTimeMillis();
@@ -200,7 +203,7 @@ class GraphNode {
 	static int counter = 1;
 	private WeightedQ wq;
 	private ArrayList<String> lstKeyWords;
-	
+	private boolean isWeight;
 	
 	
 
@@ -227,9 +230,10 @@ class GraphNode {
 	List<String> links = new LinkedList<String>();
 	static double totalTime = 0;
 
-	GraphNode(String parent, String child) {
+	GraphNode(String parent, String child,boolean isWe) {
 		this.parent = parent;
 		this.child = child;
+		this.isWeight=isWe;
 	}
 
 	boolean downloadPage(String baseURL) {
@@ -320,14 +324,12 @@ class GraphNode {
 			}
 			
 			ArrayList<String> weightedLinks=new ArrayList<String>();
-//			System.out.println(links.size()+ " size of link in "+baseURL);
-////			for(int j=0;j<links.size();j++){
-////				System.out.println("link "+j+": "+links.get(j));
-////			}
-			weightedLinks=wq.heuristicComputeWeightedByUrlListAndTopicAndCurrentPageContent(links, lstKeyWords, content);			
-			links=weightedLinks;
-			//System.out.println("Number of links"+ctr);
-			// logging end time of processing the page
+
+			if(isWeight){
+				weightedLinks=wq.heuristicComputeWeightedByUrlListAndTopicAndCurrentPageContent(links, lstKeyWords, content);			
+				links=weightedLinks;
+				
+			}
 			long endTime = System.currentTimeMillis();
 			long timeTaken = endTime - startTime;
 			totalTime += timeTaken;
