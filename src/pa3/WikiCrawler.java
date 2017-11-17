@@ -29,7 +29,7 @@ public class WikiCrawler {
 		for (int i = 0; i < keyWords.length; i++) {
 			this.keyWords[i] = this.keyWords[i].toLowerCase();
 		}
-		this.maxGraphNodes = maxGraphNodes-1;
+		this.maxGraphNodes = maxGraphNodes - 1;
 		this.fileName = fileName;
 		this.isWeighted = isWeighted;
 	}
@@ -38,12 +38,12 @@ public class WikiCrawler {
 
 		try {
 			excludeRobotTxt();
-			
-			//All pages are not allowed to download
+
+			// All pages are not allowed to download
 			if (forbiddenURLS.containsKey("*")) {
 				System.out.println("Not allowed to download this page!");
 			}
-			
+
 			String root = this.seedURL;
 			visited.add(root);
 
@@ -68,18 +68,16 @@ public class WikiCrawler {
 				getEdges(node);
 			}
 
-			
+			StringBuilder sb = new StringBuilder();
 
-			StringBuilder sb=new StringBuilder();
-
-			sb.append(visited.size()+"\n");
+			sb.append(visited.size() + "\n");
 			for (GraphNode link : crawled) {
-				
-				sb.append(link.parent + " " + link.child+"\n");
+
+				sb.append(link.parent + " " + link.child + "\n");
 			}
-		
+
 			FileIO.writeStringToFile(sb.toString(), this.fileName);
-			
+
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -99,7 +97,7 @@ public class WikiCrawler {
 					int startIndex = line.indexOf(":") + 1;
 					int endIndex = line.length();
 					forbiddenURL = line.substring(startIndex, endIndex).trim();
-					//System.out.println("forbidden:"+forbiddenURL);
+				
 					forbiddenURLS.put(forbiddenURL, ++i);
 				}
 			}
@@ -124,7 +122,7 @@ public class WikiCrawler {
 					GraphNode node = new GraphNode(parent, webAdd);
 
 					if (!parent.equalsIgnoreCase(webAdd)) {
-						if (!visited.contains(webAdd) /* && !visitedIrrelevant.contains(webAdd)*/) {
+						if (!visited.contains(webAdd) /* && !visitedIrrelevant.contains(webAdd) */) {
 
 							System.out.println("Downloading page #: " + counterDownload++ + " " + webAdd
 									+ "  No of Visited nodes: " + visited.size());
@@ -136,9 +134,7 @@ public class WikiCrawler {
 									crawled.add(node);
 								}
 								visited.add(webAdd);
-							} //else {
-								//visitedIrrelevant.add(webAdd);
-							//}
+							} 
 						}
 					}
 				}
@@ -168,18 +164,19 @@ public class WikiCrawler {
 
 	public static void main(String[] arg) {
 
-		String[] keywords = {"Tennis"};
-
-		WikiCrawler cr = new WikiCrawler("/wiki/Tennis", keywords, 100, "data"+File.separator+"pa3"+File.separator+"tenniswiki.txt", false);
+		String[] keywords = { "Tennis" };
+		boolean isWeighted = false;
+		WikiCrawler cr = new WikiCrawler("/wiki/Tennis", keywords, 100,
+				"data" + File.separator + "pa3" + File.separator + "tenniswiki.txt", isWeighted);
 		long startTime = System.currentTimeMillis();
-		System.out.println("Crawling started at:"+ startTime);
+		System.out.println("Crawling started at:" + startTime);
 		cr.crawl();
 		long endTime = System.currentTimeMillis();
-		System.out.println("Crawling ended at:"+ endTime);
+		System.out.println("Crawling ended at:" + endTime);
 		long timeTaken = endTime - startTime;
-		System.out.println("Total time taken to crawl :"+ timeTaken);
+		System.out.println("Total time taken to crawl :" + timeTaken);
 		System.out.println("Writing to file complete!");
-//
+		//
 	}
 }
 
@@ -237,24 +234,38 @@ class GraphNode {
 
 	}
 
-
 	boolean downloadPagesAndLinks(String baseURL) {
-		
+
 		BufferedReader br = null;
 		try {
 			Matcher match;
 			Pattern pattern = null;
-			
+
 			String hrefPattern = "/wiki/(?:[A-Za-z0-9-._~!#$&'()*+,;=:@]|%[0-9a-fA-F]{2})*";
 			pattern = Pattern.compile(hrefPattern);
-			
+
+			String nextChild = child.substring(child.lastIndexOf("/") + 1);
+			URL raw = new URL(baseURL + "/w/index.php?title=" + nextChild + "&action=raw");
+			br = new BufferedReader(new InputStreamReader(raw.openStream()));
+
+			String ln, r = "";
+			while ((ln = br.readLine()) != null) {
+				r += ln.toLowerCase();
+			}
 		
+			br =null;
+			for (String str : keyWords) {
+				if (!r.contains(str)) {
+					return false;
+				}
+			}
+
 			if (counter % 10 == 0) {
 				Thread.sleep(3000);
 			}
 			counter++;
 
-			//Logging start time of processing the page
+			// Logging start time of processing the page
 			long startTime = System.currentTimeMillis();
 
 			URL urlStream = new URL(baseURL + this.child);
@@ -280,11 +291,12 @@ class GraphNode {
 					}
 				}
 			}
-			//logging end time of processing the page
+			// logging end time of processing the page
 			long endTime = System.currentTimeMillis();
 			long timeTaken = endTime - startTime;
 			totalTime += timeTaken;
 			is.close();
+			br.close();
 
 		} catch (Exception e) {
 
@@ -293,7 +305,7 @@ class GraphNode {
 			return false;
 		} finally {
 			try {
-				
+				if(br!=null)
 				br.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
