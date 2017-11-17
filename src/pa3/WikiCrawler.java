@@ -107,6 +107,7 @@ public class WikiCrawler {
 		}
 	}
 
+	
 	void processingLinks(GraphNode node1) {
 		String parent = node1.child;
 		final HashMap<String, GraphNode> edgeSet = new HashMap<String, GraphNode>();
