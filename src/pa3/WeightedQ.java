@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import util.FileIO;
 
-public class WeightedQ {
+public class WeightedQ<T> {
 
 	public LinkedHashMap<String, Double> queue;
 	private ArrayList<String> links;
