@@ -22,16 +22,22 @@ public class WikiCrawler {
 	private Integer maxGraphNodes;
 	private static int counterDownload = 0;
 	private boolean isWeighted;
+	private WeightedQ weightedQ;
+	private ArrayList<String> lstKeyWords;
+
 
 	WikiCrawler(String seedURL, String[] keyWords, Integer maxGraphNodes, String fileName, boolean isWeighted) {
 		this.seedURL = seedURL;
 		this.keyWords = keyWords;
+		this.lstKeyWords=new ArrayList<String>();
 		for (int i = 0; i < keyWords.length; i++) {
 			this.keyWords[i] = this.keyWords[i].toLowerCase();
+			this.lstKeyWords.add(this.keyWords[i]);
 		}
 		this.maxGraphNodes = maxGraphNodes - 1;
 		this.fileName = fileName;
 		this.isWeighted = isWeighted;
+		weightedQ=new WeightedQ();
 	}
 
 	void crawl() {
@@ -49,6 +55,8 @@ public class WikiCrawler {
 
 			GraphNode.keyWords = this.keyWords.clone();
 			GraphNode rootNode = new GraphNode("", root);
+			rootNode.setWq(weightedQ);
+			rootNode.setLstKeyWords(lstKeyWords);
 			if (!forbiddenURLS.containsKey(root)) {
 				rootNode.downloadPagesAndLinks(BASE_URL);
 				queue.addLast(rootNode);
@@ -121,7 +129,8 @@ public class WikiCrawler {
 			if (webAdd != null && !forbiddenURLS.containsKey(webAdd)) {
 				if (!webAdd.contains(":") && !webAdd.contains("#")) {
 					GraphNode node = new GraphNode(parent, webAdd);
-
+					node.setLstKeyWords(lstKeyWords);
+					node.setWq(weightedQ);
 					if (!parent.equalsIgnoreCase(webAdd)) {
 						if (!visited.contains(webAdd) ) {
 
@@ -189,6 +198,31 @@ class GraphNode {
 	String content;
 	public static String[] keyWords;
 	static int counter = 1;
+	private WeightedQ wq;
+	private ArrayList<String> lstKeyWords;
+	
+	
+	
+
+	
+
+	public ArrayList<String> getLstKeyWords() {
+		return lstKeyWords;
+	}
+
+	public void setLstKeyWords(ArrayList<String> lstKeyWords) {
+		this.lstKeyWords = lstKeyWords;
+	}
+
+	public WeightedQ getWq() {
+		return wq;
+	}
+
+	public void setWq(WeightedQ wq) {
+		this.wq = wq;
+	}
+
+
 
 	List<String> links = new LinkedList<String>();
 	static double totalTime = 0;
@@ -238,6 +272,7 @@ class GraphNode {
 	boolean downloadPagesAndLinks(String baseURL) {
 
 		BufferedReader br = null;
+		links=new ArrayList<String>();
 		try {
 			Matcher match;
 			Pattern pattern = null;
@@ -283,6 +318,14 @@ class GraphNode {
 				}
 				ctr++;
 			}
+			
+			ArrayList<String> weightedLinks=new ArrayList<String>();
+//			System.out.println(links.size()+ " size of link in "+baseURL);
+////			for(int j=0;j<links.size();j++){
+////				System.out.println("link "+j+": "+links.get(j));
+////			}
+			weightedLinks=wq.heuristicComputeWeightedByUrlListAndTopicAndCurrentPageContent(links, lstKeyWords, content);			
+			links=weightedLinks;
 			//System.out.println("Number of links"+ctr);
 			// logging end time of processing the page
 			long endTime = System.currentTimeMillis();

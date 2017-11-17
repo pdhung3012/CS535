@@ -392,7 +392,7 @@ public class WeightedQ {
 
 	public static void main(String[] args) {
 		String urlPrefix = "https://en.wikipedia.org/";
-		String urlStartWikiPage = urlPrefix + "/wiki/Tennis";
+		String urlStartWikiPage = urlPrefix + "wiki/Football";
 		String fpSetOfTopic = "data" + File.separator + "pa3" + File.separator
 				+ "TopicForWeightedQ.txt";
 		String fpOutputText = "data" + File.separator + "pa3" + File.separator

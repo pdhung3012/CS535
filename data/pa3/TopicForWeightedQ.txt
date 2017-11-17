@@ -1,7 +1,1 @@
-tennis
-grand slam
-french open
-australian open
-wimbledon
-US open
-masters
+football
