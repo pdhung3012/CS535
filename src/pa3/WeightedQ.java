@@ -18,6 +18,7 @@ public class WeightedQ {
 	public LinkedHashMap<String, Double> queue;
 	private ArrayList<String> links;
 	private String strWebContent;
+	//
 
 	public String getStrWebContent() {
 		return strWebContent;
