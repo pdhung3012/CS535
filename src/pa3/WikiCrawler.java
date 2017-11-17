@@ -244,21 +244,7 @@ class GraphNode {
 			String hrefPattern = "/wiki/(?:[A-Za-z0-9-._~!#$&'()*+,;=:@]|%[0-9a-fA-F]{2})*";
 			pattern = Pattern.compile(hrefPattern);
 
-			String nextChild = child.substring(child.lastIndexOf("/") + 1);
-			URL raw = new URL(baseURL + "/w/index.php?title=" + nextChild + "&action=raw");
-			br = new BufferedReader(new InputStreamReader(raw.openStream()));
-
-			String ln, r = "";
-			while ((ln = br.readLine()) != null) {
-				r += ln.toLowerCase();
-			}
-		
-			br =null;
-			for (String str : keyWords) {
-				if (!r.contains(str)) {
-					return false;
-				}
-			}
+			
 
 			if (counter % 10 == 0) {
 				Thread.sleep(3000);
@@ -275,6 +261,7 @@ class GraphNode {
 			String line = "";
 			content = "";
 			Boolean isP = false;
+			int ctr=0;
 			while ((line = br.readLine()) != null) {
 
 				if (line.contains("<p>")) {
@@ -282,15 +269,20 @@ class GraphNode {
 				}
 
 				if (isP && line.contains("<a href=")) {
-
+					//System.out.println(line);
+					//System.exit(1);
 					match = pattern.matcher(line);
 
 					while (match.find()) {
 						String address = line.substring(match.start(0), match.end(0));
+					//	System.out.println(address);
 						links.add(address);
 					}
+					//System.exit(1);
 				}
+				ctr++;
 			}
+			//System.out.println("Number of links"+ctr);
 			// logging end time of processing the page
 			long endTime = System.currentTimeMillis();
 			long timeTaken = endTime - startTime;
