@@ -122,7 +122,7 @@ public class WikiCrawler {
 					GraphNode node = new GraphNode(parent, webAdd);
 
 					if (!parent.equalsIgnoreCase(webAdd)) {
-						if (!visited.contains(webAdd) /* && !visitedIrrelevant.contains(webAdd) */) {
+						if (!visited.contains(webAdd) ) {
 
 							System.out.println("Downloading page #: " + counterDownload++ + " " + webAdd
 									+ "  No of Visited nodes: " + visited.size());
