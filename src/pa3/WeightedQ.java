@@ -99,7 +99,7 @@ public class WeightedQ {
 			// content = "";
 			Boolean isP = false;
 			StringBuilder sbContent = new StringBuilder();
-			HashSet<String> setLinks = new HashSet<String>();
+			LinkedHashSet<String> setLinks = new LinkedHashSet<String>();
 			while ((line = br.readLine()) != null) {
 			//	System.out.println(line);
 				sbContent.append(line + "\n");
@@ -211,10 +211,19 @@ public class WeightedQ {
 			System.out.println("Failed reading base web after "+indexTried+" times");
 		}
 		
+		
+		System.out.println(links.size()+ " size of link in "+urlInput);
+//		for(int j=0;j<links.size();j++){
+//			System.out.println("link "+j+": "+links.get(j));
+//		}
+		queue=new LinkedHashMap<String, Double>();
 		for (int i = 0; i < links.size(); i++) {
 			//System.out.println(links.get(i));
 			//System.out.println(lstWords.toString());
 			String strCompareWord=links.get(i);
+			if(strCompareWord.contains(":")){
+				continue;
+			}
 			if (isContainInURLLink(links.get(i), lstWords)) {				
 				add(links.get(i), 1.0);
 			} else {
@@ -242,6 +251,84 @@ public class WeightedQ {
 		for (int i=0;i<queueSize;i++) {
 			Entry<String,Double> item=extract();
 			lstOutput.add(item.getKey() + "\t" + item.getValue());
+		}
+
+		return lstOutput;
+	}
+	
+	public ArrayList<String> heuristicComputeWeightedByUrlListAndTopicAndCurrentPageContent(List<String> paramLinksLst,
+			ArrayList<String> lstTopics,String strWebContent) {
+		ArrayList<String> lstOutput = new ArrayList<String>();
+		
+		int minDistanceAccept=20;
+		String contentProcess=strWebContent.trim().toLowerCase().replaceAll(
+				":", " ").replaceAll("_", " ").replaceAll("\\(", " ").replaceAll("\\)", " ").trim();
+		contentProcess=getOneSpaceContent(contentProcess);
+		System.out.println("Done get content");
+		
+		LinkedHashSet<String> setLinks=new LinkedHashSet<String>();
+		ArrayList<String> paramLstSetLink=new ArrayList<String>();
+		for (int i = 0; i < paramLinksLst.size(); i++) {
+			setLinks.add(paramLinksLst.get(i));
+		}
+		
+		for(String strItem:setLinks){
+			paramLstSetLink.add(strItem);
+		}
+		
+//		for (int i = 0; i < paramLinksLst.size(); i++) {
+//			String itemI=paramLinksLst.get(i);
+//			if(!setChecks.contains(itemI)){
+//				setChecks.add(itemI);
+//				paramLstSetLink.add(itemI);
+//			}
+//			
+//		}
+		
+		System.out.println(paramLstSetLink.size()+ " size of link in ");
+//		for(int j=0;j<paramLstSetLink.size();j++){
+//			System.out.println("link "+j+": "+paramLstSetLink.get(j));
+//		}
+		
+		queue=new LinkedHashMap<>();
+		
+		for (int i = 0; i < paramLstSetLink.size(); i++) {
+			//System.out.println(links.get(i));
+			//System.out.println(lstWords.toString());
+			String strCompareWord=paramLstSetLink.get(i);
+			if(strCompareWord.contains(":")){
+				continue;
+			}
+			if (isContainInURLLink(paramLstSetLink.get(i), lstTopics)) {				
+				add(paramLstSetLink.get(i), 1.0);
+			} else {
+				String[] arrInput = paramLstSetLink.get(i).trim().split("/");
+				String strLinkContent = arrInput[arrInput.length - 1];
+				String strContentLink = getOneSpaceContent(strLinkContent.replaceAll(
+						":", " ").replaceAll("_", " ").replaceAll("\\(", " ").replaceAll("\\)", " ").toLowerCase());
+				int minDist=distWordAndListOfWord(strContentLink, lstTopics, contentProcess);
+				double weighti=0;
+				//System.out.println(links.get(i)+" "+minDist);
+				if(minDist<=minDistanceAccept){
+					weighti=1.0/(minDist+2);
+					add(paramLstSetLink.get(i), weighti);
+				} else{
+					add(paramLstSetLink.get(i), 0.0);
+				}
+			}
+			;
+		}
+
+		// get WeightedQ
+		lstOutput = new ArrayList<String>();
+		int queueSize= queue.keySet().size();
+		
+		for (int i=0;i<queueSize;i++) {
+			Entry<String,Double> item=extract();
+			if(item.getValue()>0){
+				lstOutput.add(item.getKey());
+			}
+			
 		}
 
 		return lstOutput;
@@ -304,7 +391,7 @@ public class WeightedQ {
 
 	public static void main(String[] args) {
 		String urlPrefix = "https://en.wikipedia.org/";
-		String urlStartWikiPage = urlPrefix + "wiki/Tennis";
+		String urlStartWikiPage = urlPrefix + "/wiki/Tennis";
 		String fpSetOfTopic = "data" + File.separator + "pa3" + File.separator
 				+ "TopicForWeightedQ.txt";
 		String fpOutputText = "data" + File.separator + "pa3" + File.separator
