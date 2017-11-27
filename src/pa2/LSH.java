@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Scanner;
 
 import util.FileIO;
 
@@ -19,14 +20,62 @@ public class LSH {
 	private int r,indexDoc,c,T;
 	ArrayList<Hashtable<Integer,ArrayList<String>>> lstHashT;
 
+	
 	public LSH(int[][] minHashMatrix, String[] docNames, int bands){
 		this.minHashMatrix=minHashMatrix;
 		this.docNames=docNames;
-		this.bands=bands;		
+		this.bands=bands;	
+		int N=docNames.length;		
+		T=20000*N;
+		while(!isPrime(T)){
+			T++;
+		}
+		c=T;
+		r=this.minHashMatrix.length/bands;
 	}
 	
 	
 	
+	
+	public int getBands() {
+		return bands;
+	}
+
+
+
+
+	public void setBands(int bands) {
+		this.bands = bands;
+	}
+
+
+
+
+	public ArrayList<Hashtable<Integer, ArrayList<String>>> getLstHashT() {
+		return lstHashT;
+	}
+
+
+
+	public void setLstHashT(
+			ArrayList<Hashtable<Integer, ArrayList<String>>> lstHashT) {
+		this.lstHashT = lstHashT;
+	}
+
+
+
+	public int[][] getMinHashMatrix() {
+		return minHashMatrix;
+	}
+
+
+
+	public void setMinHashMatrix(int[][] minHashMatrix) {
+		this.minHashMatrix = minHashMatrix;
+	}
+
+
+
 	public int getNumberNeedCompare() {
 		return numberNeedCompare;
 	}
@@ -68,7 +117,7 @@ public class LSH {
 			for(int j=i*r;j<(i+1)*r;j++){
 				int indexMHIL=(j%r);
 				mhil[indexMHIL]=minHashMatrix[j][indexDoc];
-				//System.out.println("aa "+mhil[indexMHIL]);
+				//System.out.println("matrix "+minHashMatrix[j][indexDoc]);
 			}
 			int hashValue=computeHash(mhil, T);
 			//System.out.println("Hash value "+hashValue);
@@ -99,14 +148,16 @@ public class LSH {
 		return result;
 	}
 	
-	private int computeHash(int[] mhil,int T){
+	public int computeHash(int[] mhil,int T2){
 		int result=0;
 		String strResult="";
 //		result=Arrays.hashCode(mhil);
 		for(int i=0;i<mhil.length;i++){
 			strResult+=mhil[i]+",";
 		}
-		result=strResult.hashCode()%T+1;
+	//	System.out.println("T equals "+T2);
+	
+		result=strResult.hashCode()%T2+1;
 		return result;
 	}
 	
