@@ -18,7 +18,7 @@ public class WikiCrawler {
 
 	private String seedURL, fileName;
 	private String[] keyWords;
-	private static String BASE_URL = "https://en.wikipedia.org";
+	private static String BASE_URL = "http://web.cs.iastate.edu/~pavan";
 	private Integer maxGraphNodes;
 	private static int counterDownload = 0;
 	private boolean isWeighted;
@@ -179,7 +179,7 @@ public class WikiCrawler {
 
 		String[] keywords = { "Tennis" };
 		boolean isWeighted = true;
-		WikiCrawler cr = new WikiCrawler("/wiki/Tennis", keywords, 100,
+		WikiCrawler cr = new WikiCrawler("/wiki/cs535_Seed1.html", keywords, 100,
 				"data" + File.separator + "pa3" + File.separator + "tenniswiki.txt", isWeighted);
 		long startTime = System.currentTimeMillis();
 		System.out.println("Crawling started at:" + startTime);
@@ -300,6 +300,7 @@ class GraphNode {
 			br = new BufferedReader(new InputStreamReader(is));
 			String line = "";
 			content = "";
+			downloadPage(baseURL);
 			Boolean isP = false;
 			int ctr=0;
 			while ((line = br.readLine()) != null) {
@@ -326,9 +327,13 @@ class GraphNode {
 			ArrayList<String> weightedLinks=new ArrayList<String>();
 
 			if(isWeight){
+			//	System.out.println(lstKeyWords.toString()+" is the list topic "+links.toString());
+				//System.out.println("Content: "+content);
 				weightedLinks=wq.heuristicComputeWeightedByUrlListAndTopicAndCurrentPageContent(links, lstKeyWords, content);			
 				links=weightedLinks;
 				
+			} else{
+				//System.out.println("content unweighted: "+content);
 			}
 			long endTime = System.currentTimeMillis();
 			long timeTaken = endTime - startTime;
